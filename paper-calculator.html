@@ -1,0 +1,114 @@
+<!--
+Copyright 2014 The Toolkitchen Authors. All rights reserved.
+Use of this source code is governed by a BSD-style
+license that can be found in the LICENSE file.
+-->
+
+<link rel="import" href="../polymer-media-query/polymer-media-query.html">
+<link rel="import" href="paper-calculator-output.html">
+<link rel="import" href="paper-calculator-keypad.html">
+
+<polymer-element name="paper-calculator" attributes="responsiveWidth">
+
+  <template>
+
+    <style>
+    
+      :host {
+        display: block;
+        position: relative;
+        background-color: #eee;
+        overflow: hidden;
+        
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        
+        -webkit-tap-highlight-color: rgba(0,0,0,0);
+        -webkit-touch-callout: none;
+        -webkit-font-smoothing: antialiased;
+      }
+      
+      #output {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 38%;
+        z-index: 1;
+        box-shadow: 0 6px 4px -2px rgba(0,0,0,0.3);
+      }
+      
+      #keypad {
+        position: absolute;
+        top: 38%;
+        bottom: 0;
+        width: 100%;
+      }
+      
+    </style>
+    
+    <paper-calculator-output id="output" expression="{{expression}}" result="{{result}}"></paper-calculator-output>
+    
+    <paper-calculator-keypad id="keypad" wideMatches="{{wideMatches}}" standardKeys="{{standardKeys}}" advancedKeys="{{advancedKeys}}" on-keyenter="{{keyEnter}}"></paper-calculator-keypad>
+    
+    <polymer-media-query query="min-width: {{responsiveWidth}}" queryMatches="{{wideMatches}}"></polymer-media-query>
+    
+  </template>
+
+  <script>
+
+    Polymer('paper-calculator', {
+      
+      standardKeys: [
+        ['7', '4', '1', '.'],
+        ['8', '5', '2', '0'],
+        ['9', '6', '3', '='],
+        ['<small>DEL</small>', '+', '-', '&#247;', '&#215;'],
+      ],
+      
+      advancedKeys: [
+        ['2nd', '1/x', 'x!', 'sin', 'sinh', 'EXP'],
+        ['(', 'x&sup2;', '&radic;', 'cos', 'cosh', '&Pi;'],
+        [')', 'x&sup3', '&#8319; &radic;y', 'tan', 'tanh', 'EE'],
+        ['%', 'y&#8319;', 'log', 'ln', 'e', 'Rand']
+      ],
+      
+      expression: '',
+      responsiveWidth: '800px',
+      
+      clear: function() {
+        this.expression = '';
+        this.result = '';
+      },
+      
+      keyEnter: function(e) {
+        if (this.result) {
+          this.clear();
+        }
+        var k = e.detail.key;
+        if (k === '=') {
+          this.eval();
+        } else if (k === '<small>DEL</small>') {
+          this.clear();
+        } else {
+          this.expression += k;
+        }
+      },
+      
+      eval: function() {
+        var s = this.expression;
+        s = s.replace(/&#215;/g, '*').replace(/&#247;/g, '/');
+        try {
+          this.result = eval(s);
+        } catch (x) {
+          this.result = '?';
+        }
+      }
+      
+    });
+
+  </script>
+
+</polymer-element>

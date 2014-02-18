@@ -1,0 +1,51 @@
+<!--
+Copyright 2014 The Toolkitchen Authors. All rights reserved.
+Use of this source code is governed by a BSD-style
+license that can be found in the LICENSE file.
+-->
+
+<link rel="import" href="paper-calculator-key.html">
+
+<polymer-element name="paper-calculator-keygrid" attributes="keys">
+
+  <template>
+  
+    <link rel="stylesheet" href="../polymer-flex-layout/polymer-flex-layout.css">
+    
+    <div class="flexbox flex">
+    
+      <template repeat="{{col in keys}}">
+      
+        <div class="flexbox column flex">
+        
+          <template repeat="{{col}}">
+          
+            <paper-calculator-key class="flexbox justify-center align-center flex" label="{{}}" on-tap="{{keyEnter}}"></paper-calculator-key>
+            
+          </template>
+          
+        </div>
+        
+      </template>
+      
+    </div>
+    
+  </template>
+  
+  <script>
+  
+    Polymer('paper-calculator-keygrid', {
+      
+      ready: function() {
+        this.classList.add('flexbox');
+      },
+      
+      keyEnter: function(e) {
+        this.fire('keyenter', {key: e.target.templateInstance.model});
+      }
+      
+    });
+    
+  </script>
+  
+</polymer-element>

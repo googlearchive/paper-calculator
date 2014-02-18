@@ -1,0 +1,180 @@
+<!--
+Copyright 2014 The Toolkitchen Authors. All rights reserved.
+Use of this source code is governed by a BSD-style
+license that can be found in the LICENSE file.
+-->
+
+<link rel="import" href="../paper-ink/paper-ink.html">
+<link rel="import" href="paper-calculator-keygrid.html">
+
+<polymer-element name="paper-calculator-keypad" attributes="wideMatches standardKeys advancedKeys">
+
+  <template>
+
+    <style>
+    
+      :host {
+        display: block;
+        position: relative;
+        overflow: hidden;
+      }
+      
+      #panels {
+        position: absolute;
+        top: 0;
+        right: 12px;
+        bottom: 0;
+        left: 0;
+        font-weight: 300;
+        cursor: pointer;
+      }
+      
+      .standard {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background-color: #4c4c4c;
+        font-size: 32px;
+        color: #fff;
+        transition: width linear 0.18s;
+      }
+      
+      .standard ^ .column:nth-of-type(4) {
+        background-color: #666;
+        border-left: 1px solid #444;
+      }
+      
+      .standard ^ paper-calculator-key:active {
+        z-index: 1;
+      }
+      
+      .advanced {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 100%;
+        width: calc(75% + 12px);
+        background-color: #40bd9e;
+        font-size: 20px;
+        color: #f7f7f7;
+        transition: all linear 0.18s;
+        box-shadow: -3px 0 6px rgba(0, 0, 0, 0.3);
+      }
+      
+      .advanced.dragging {
+        transition: none;
+      }
+      
+      .advanced.opened {
+        left: 25%;
+      }
+      
+      .handle-bar {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        width: 12px;
+        padding-left: 20px;
+        background-color: transparent;
+        cursor: pointer;
+      }
+      
+      paper-ink {
+        position: fixed;
+        width: 80px;
+        height: 80px;
+        pointer-events: none;
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0);
+      }
+      
+      paper-ink ^ #inkOuter {
+        box-shadow: 2px 2px 3px 0px rgba(0,0,0,0.2);
+      }
+      
+      /* wide layout */
+      #panels.wide-layout {
+        right: 0;
+      }
+      
+      #panels.wide-layout .standard {
+        width: calc(100% * 4 / 7);
+      }
+        
+      #panels.wide-layout .advanced {
+        left: calc(100% * 4 / 7);
+        width: calc(100% * 3 / 7);
+        box-shadow: none;
+      }
+      
+    </style>
+    
+    <div id="panels" class="{{wideMatches ? 'wide-layout' : ''}}" touch-action="pan-y" on-pointerdown="{{inkSpill}}" on-pointerup="{{inkEvaporate}}" on-pointerleave="{{inkEvaporate}}">
+      
+      <paper-calculator-keygrid class="standard" keys="{{standardKeys}}"></paper-calculator-keygrid>
+      
+      <paper-calculator-keygrid id="advanced" class="advanced" keys="{{advancedKeys}}" on-trackstart="{{trackStart}}" on-track="{{track}}" on-trackend="{{trackEnd}}"></paper-calculator-keygrid>
+      
+      <paper-ink id="ink" color="rgba(241, 250, 65, 0.85)" duration="140"></paper-ink>
+      
+    </div>
+    
+    <div class="handle-bar" on-tap="{{toggleAdvanced}}" on-trackstart="{{trackStart}}" on-track="{{track}}" on-trackend="{{trackEnd}}"></div>
+    
+  </template>
+
+  <script>
+
+    Polymer('paper-calculator-keypad', {
+      
+      trackStart: function(e) {
+        if (this.wideMatches) {
+          return;
+        }
+        this.$.ink.reset();
+        this._startx = this.$.advanced.offsetLeft;
+        this._w = this.$.panels.offsetWidth;
+        this.$.advanced.classList.add('dragging');
+        e.preventTap();
+      },
+      
+      track: function(e) {
+        if (this.wideMatches) {
+          return;
+        }
+        this.$.advanced.style.left = Math.min(this._w, 
+            Math.max(this._w * 0.25, this._startx + e.dx)) + 'px';
+      },
+      
+      trackEnd: function(e) {
+        if (this.wideMatches) {
+          return;
+        }
+        this.$.advanced.style.left = null;
+        this.$.advanced.classList.remove('dragging');
+        this.$.advanced.classList.toggle('opened', e.xDirection === -1);
+      },
+      
+      inkSpill: function(e) {
+        var w = this.$.ink.offsetWidth / 2;
+        this.$.ink.style.top = e.pageY - w + 'px';
+        this.$.ink.style.left = e.pageX - w + 'px';
+        this.$.ink.spill();
+      },
+      
+      inkEvaporate: function() {
+        this.$.ink.evaporateAfterSpillCompleted();
+      },
+      
+      toggleAdvanced: function(e) {
+        this.$.advanced.classList.toggle('opened');
+      }
+      
+    });
+
+  </script>
+
+</polymer-element>

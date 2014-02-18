@@ -1,0 +1,122 @@
+<!--
+Copyright 2014 The Toolkitchen Authors. All rights reserved.
+Use of this source code is governed by a BSD-style
+license that can be found in the LICENSE file.
+-->
+
+<link rel="import" href="../polymer/polymer.html">
+
+<polymer-element name="paper-calculator-output" attributes="expression result">
+
+  <template>
+  
+    <link rel="stylesheet" href="../polymer-flex-layout/polymer-flex-layout.css">
+  
+    <style>
+    
+      :host {
+        display: block;
+      }
+    
+      .output {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        padding-right: 30px;
+        box-sizing: border-box;
+        -mox-box-sizing: border-box;
+        background-color: transparent;
+        color: #b3b3b3;
+        overflow: hidden;
+      }
+      
+      .output.show-result {
+        color: #eee;
+      }
+      
+      #expression {
+        width: 100%;
+        height: 100%;
+        font-size: 90px;
+        font-weight: 100;
+        text-align: right;
+      }
+      
+      .show-result > #expression {
+        height: 38%;
+        font-size: 40px;
+        font-weight: 400;
+      }
+      
+      .result {
+        visibility: hidden;
+      }
+      
+      .show-result > .result {
+        visibility: visible;
+        height: 62%;
+        font-size: 80px;
+        font-weight: 400;
+      }
+      
+      .result-equal {
+        padding: 0 30px;
+        font-size: 40px;
+      }
+      
+      .result-value {
+        overflow: hidden;
+      }
+      
+      .output-bg-ink {
+        position: absolute;
+        top: -100%;
+        left: -180%;
+        width: 500%;
+        height: 500%;
+        border-radius: 50%;
+        z-index: -1;
+        background-color: #73daeb;
+        -webkit-transform: scale(0);
+        transform: scale(0);
+      }
+      
+      .output.show-result > .output-bg-ink {
+        -webkit-transform: scale(1);
+        transform: scale(1);
+        -webkit-transition: -webkit-transform ease 0.38s;
+        transition: transform ease 0.38s;
+      }
+      
+    </style>
+  
+    <div class="output {{result ? 'show-result' : ''}}">
+    
+      <div id="expression" class="flexbox align-center justify-end"></div>
+      
+      <div class="result flexbox align-center">
+      
+        <div class="result-equal">=</div>
+        <div class="result-value flexbox justify-end flex">{{result}}</div>
+        
+      </div>
+      
+      <div class="output-bg-ink"></div>
+      
+    </div>
+    
+  </template>
+
+  <script>
+  
+    Polymer('paper-calculator-output', {
+      
+      expressionChanged: function() {
+        this.$.expression.innerHTML = this.expression;
+      }
+      
+    });
+    
+  </script>
+  
+</polymer-element>
