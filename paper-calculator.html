@@ -7,6 +7,7 @@ license that can be found in the LICENSE file.
 <link rel="import" href="../polymer-media-query/polymer-media-query.html">
 <link rel="import" href="paper-calculator-output.html">
 <link rel="import" href="paper-calculator-keypad.html">
+<link rel="import" href="paper-calculator-math.html">
 
 <polymer-element name="paper-calculator" attributes="responsiveWidth">
 
@@ -53,6 +54,8 @@ license that can be found in the LICENSE file.
     
     <paper-calculator-keypad id="keypad" wideMatches="{{wideMatches}}" standardKeys="{{standardKeys}}" advancedKeys="{{advancedKeys}}" on-keyenter="{{keyEnter}}"></paper-calculator-keypad>
     
+    <paper-calculator-math id="math" expression="{{expression}}" result="{{result}}"></paper-calculator-math>
+    
     <polymer-media-query query="min-width: {{responsiveWidth}}" queryMatches="{{wideMatches}}"></polymer-media-query>
     
   </template>
@@ -89,21 +92,11 @@ license that can be found in the LICENSE file.
         }
         var k = e.detail.key;
         if (k === '=') {
-          this.eval();
+          this.$.math.eval();
         } else if (k === '<small>DEL</small>') {
           this.clear();
         } else {
           this.expression += k;
-        }
-      },
-      
-      eval: function() {
-        var s = this.expression;
-        s = s.replace(/&#215;/g, '*').replace(/&#247;/g, '/');
-        try {
-          this.result = eval(s);
-        } catch (x) {
-          this.result = '?';
         }
       }
       

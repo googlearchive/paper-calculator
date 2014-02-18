@@ -1,0 +1,29 @@
+<!--
+Copyright 2014 The Toolkitchen Authors. All rights reserved.
+Use of this source code is governed by a BSD-style
+license that can be found in the LICENSE file.
+-->
+
+<link rel="import" href="../polymer/polymer.html">
+
+<polymer-element name="paper-calculator-math" attributes="expression result">
+  
+  <script>
+  
+    Polymer('paper-calculator-math', {
+      
+      eval: function() {
+        var s = this.expression;
+        s = s.replace(/&#215;/g, '*').replace(/&#247;/g, '/');
+        try {
+          this.result = eval(s);
+        } catch (x) {
+          this.result = '?';
+        }
+      }
+    
+    });
+    
+  </script>
+  
+</polymer-element>
