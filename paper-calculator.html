@@ -25,7 +25,7 @@ license that can be found in the LICENSE file.
 <link rel="import" href="paper-calculator-keypad.html">
 <link rel="import" href="paper-calculator-math.html">
 
-<polymer-element name="paper-calculator" attributes="wideMode responsiveWidth">
+<polymer-element name="paper-calculator" attributes="expression result wideMode responsiveWidth">
 
   <template>
 
@@ -114,6 +114,7 @@ license that can be found in the LICENSE file.
       wideMode: false,
       responsiveWidth: '',
       expression: '',
+      result: '',
       
       clear: function() {
         this.expression = '';
