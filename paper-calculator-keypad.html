@@ -96,6 +96,10 @@ license that can be found in the LICENSE file.
         box-shadow: 2px 2px 3px 0px rgba(0,0,0,0.2);
       }
       
+      paper-ink ^ #inkInner {
+        background-color: #4c4c4c;
+      }
+      
       /* wide layout */
       #panels.wide-layout {
         right: 0;
@@ -119,7 +123,7 @@ license that can be found in the LICENSE file.
       
       <paper-calculator-keygrid id="advanced" class="advanced" keys="{{advancedKeys}}" on-trackstart="{{trackStart}}" on-track="{{track}}" on-trackend="{{trackEnd}}"></paper-calculator-keygrid>
       
-      <paper-ink id="ink" color="rgba(241, 250, 65, 0.85)" duration="140"></paper-ink>
+      <paper-ink id="ink" color="rgba(241, 250, 65, 0.85)" duration="280"></paper-ink>
       
     </div>
     
