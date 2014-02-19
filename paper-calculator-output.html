@@ -37,14 +37,14 @@ license that can be found in the LICENSE file.
       #expression {
         width: 100%;
         height: 100%;
-        font-size: 90px;
+        font-size: 5.625em;
         font-weight: 100;
         text-align: right;
       }
       
       .show-result > #expression {
         height: 38%;
-        font-size: 40px;
+        font-size: 2.5em;
         font-weight: 400;
       }
       
@@ -55,37 +55,17 @@ license that can be found in the LICENSE file.
       .show-result > .result {
         visibility: visible;
         height: 62%;
-        font-size: 80px;
         font-weight: 400;
       }
       
       .result-equal {
         padding: 0 30px;
-        font-size: 40px;
+        font-size: 2.5em;
       }
       
       .result-value {
+        font-size: 5em;
         overflow: hidden;
-      }
-      
-      .output-bg-ink {
-        position: absolute;
-        top: -100%;
-        left: -180%;
-        width: 500%;
-        height: 500%;
-        border-radius: 50%;
-        z-index: -1;
-        background-color: #73daeb;
-        -webkit-transform: scale(0);
-        transform: scale(0);
-      }
-      
-      .output.show-result > .output-bg-ink {
-        -webkit-transform: scale(1);
-        transform: scale(1);
-        -webkit-transition: -webkit-transform ease 0.38s;
-        transition: transform ease 0.38s;
       }
       
     </style>
@@ -100,8 +80,6 @@ license that can be found in the LICENSE file.
         <div class="result-value flexbox justify-end flex">{{result}}</div>
         
       </div>
-      
-      <div class="output-bg-ink"></div>
       
     </div>
     

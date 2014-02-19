@@ -41,7 +41,8 @@ license that can be found in the LICENSE file.
       },
       
       keyEnter: function(e) {
-        this.fire('keyenter', {key: e.target.templateInstance.model});
+        this.fire('keyenter', 
+            {key: e.target.templateInstance.model, node: e.target});
       }
       
     });
