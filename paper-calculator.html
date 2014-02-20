@@ -54,7 +54,12 @@ license that can be found in the LICENSE file.
         width: 100%;
         height: 38%;
         z-index: 1;
-        box-shadow: 0 7px 4px -2px rgba(0,0,0,0.35);
+        box-shadow: 0 6px 4px -2px rgba(0,0,0,0.35);
+        transition: box-shadow 0.1s ease;
+      }
+      
+      #output.level1, #output.level0.transitioning {
+        box-shadow: 0 8px 6px -2px rgba(0,0,0,0.35);
       }
       
       #keypad {
@@ -75,17 +80,17 @@ license that can be found in the LICENSE file.
       #resultInk.spill {
         -webkit-transform: scale(1);
         transform: scale(1);
-        -webkit-transition: -webkit-transform ease-in-out 0.5s;
-        transition: transform ease-in-out 0.5s;
+        -webkit-transition: -webkit-transform 0.5s ease-in-out;
+        transition: transform 0.5s ease-in-out;
       }
       
     </style>
     
     <div id="resultInk" class="{{result ? 'spill' : ''}}"></div>
     
-    <paper-calculator-output id="output" expression="{{expression}}" result="{{result}}"></paper-calculator-output>
+    <paper-calculator-output id="output" expression="{{expression}}" result="{{result}}" class="level{{level}} {{transitioning ? 'transitioning' : ''}}"></paper-calculator-output>
     
-    <paper-calculator-keypad id="keypad" wideMatches="{{wideMatches || wideMode}}" standardKeys="{{standardKeys}}" advancedKeys="{{advancedKeys}}" on-keyenter="{{keyEnter}}"></paper-calculator-keypad>
+    <paper-calculator-keypad id="keypad" wideMatches="{{wideMatches || wideMode}}" standardKeys="{{standardKeys}}" advancedKeys="{{advancedKeys}}" level="{{level}}" transitioning="{{transitioning}}" on-keyenter="{{keyEnter}}"></paper-calculator-keypad>
     
     <paper-calculator-math id="math" expression="{{expression}}" result="{{result}}"></paper-calculator-math>
     

@@ -4,10 +4,11 @@ Use of this source code is governed by a BSD-style
 license that can be found in the LICENSE file.
 -->
 
+<link rel="import" href="../polymer-selector/polymer-selector.html">
 <link rel="import" href="../paper-ink/paper-ink.html">
 <link rel="import" href="paper-calculator-keygrid.html">
 
-<polymer-element name="paper-calculator-keypad" attributes="wideMatches standardKeys advancedKeys">
+<polymer-element name="paper-calculator-keypad" attributes="wideMatches standardKeys advancedKeys level transitioning">
 
   <template>
 
@@ -38,16 +39,12 @@ license that can be found in the LICENSE file.
         font-weight: 300;
         font-size: 2em;
         color: #fff;
-        transition: width linear 0.18s;
+        transition: width 0.13s linear;
       }
       
       .standard ^ .column:nth-of-type(4) {
         background-color: #666;
         border-left: 1px solid #444;
-      }
-      
-      .standard ^ paper-calculator-key:active {
-        z-index: 1;
       }
       
       .advanced {
@@ -60,15 +57,17 @@ license that can be found in the LICENSE file.
         font-weight: 400;
         font-size: 1.125em;
         color: #f7f7f7;
-        transition: all linear 0.18s;
-        box-shadow: -3px 0 6px rgba(0, 0, 0, 0.3);
+        transition: left 0.13s linear, width 0.13s linear;
+        box-shadow: -1px 0 3px rgba(0, 0, 0, 0.3);
       }
       
       .advanced.dragging {
+        box-shadow: -4px 0 6px rgba(0, 0, 0, 0.3);
         transition: none;
       }
       
-      .advanced.opened {
+      .advanced.polymer-selected {
+        box-shadow: -4px 0 6px rgba(0, 0, 0, 0.3);
         left: 25%;
       }
       
@@ -121,7 +120,7 @@ license that can be found in the LICENSE file.
       
       <paper-calculator-keygrid class="standard" keys="{{standardKeys}}"></paper-calculator-keygrid>
       
-      <paper-calculator-keygrid id="advanced" class="advanced" keys="{{advancedKeys}}" on-trackstart="{{trackStart}}" on-track="{{track}}" on-trackend="{{trackEnd}}"></paper-calculator-keygrid>
+      <paper-calculator-keygrid id="advanced" on-transitionend="{{advancedTransitionEnd}}" class="advanced" keys="{{advancedKeys}}" on-trackstart="{{trackStart}}" on-track="{{track}}" on-trackend="{{trackEnd}}"></paper-calculator-keygrid>
       
       <paper-ink id="ink" color="rgba(241, 250, 65, 0.85)" duration="280"></paper-ink>
       
@@ -129,11 +128,22 @@ license that can be found in the LICENSE file.
     
     <div class="handle-bar" on-tap="{{toggleAdvanced}}" on-trackstart="{{trackStart}}" on-track="{{track}}" on-trackend="{{trackEnd}}"></div>
     
+    <polymer-selector target="{{$.panels}}" itemSelector="paper-calculator-keygrid" selected="{{level}}" notap></polymer-selector>
+    
   </template>
 
   <script>
 
     Polymer('paper-calculator-keypad', {
+      
+      level: 0,
+      transitioning: false,
+      
+      wideMatchesChanged: function() {
+        if (this.wideMatches) {
+          this.level = 0;
+        }
+      },
       
       trackStart: function(e) {
         if (this.wideMatches) {
@@ -143,6 +153,7 @@ license that can be found in the LICENSE file.
         this._startx = this.$.advanced.offsetLeft;
         this._w = this.$.panels.offsetWidth;
         this.$.advanced.classList.add('dragging');
+        this.transitioning = true;
         e.preventTap();
       },
       
@@ -160,7 +171,7 @@ license that can be found in the LICENSE file.
         }
         this.$.advanced.style.left = null;
         this.$.advanced.classList.remove('dragging');
-        this.$.advanced.classList.toggle('opened', e.xDirection === -1);
+        this.level = e.xDirection === -1 ? 1 : 0;
       },
       
       inkSpill: function(e) {
@@ -175,7 +186,15 @@ license that can be found in the LICENSE file.
       },
       
       toggleAdvanced: function(e) {
-        this.$.advanced.classList.toggle('opened');
+        if (this.wideMatches) {
+          return;
+        }
+        this.transitioning = true;
+        this.level = this.level == 0 ? 1 : 0;
+      },
+      
+      advancedTransitionEnd: function() {
+        this.transitioning = false;
       }
       
     });
