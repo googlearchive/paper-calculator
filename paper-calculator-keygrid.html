@@ -12,7 +12,7 @@ license that can be found in the LICENSE file.
   
     <link rel="stylesheet" href="../polymer-flex-layout/polymer-flex-layout.css">
     
-    <div class="flexbox flex">
+    <div id="keys" class="flexbox flex">
     
       <template repeat="{{col in keys}}">
       
@@ -41,8 +41,11 @@ license that can be found in the LICENSE file.
       },
       
       keyEnter: function(e) {
-        this.fire('keyenter', 
-            {key: e.target.templateInstance.model, node: e.target});
+        this.fire('keyenter', {key: e.target.templateInstance.model});
+      },
+      
+      findKeyNode: function(key) {
+        return this.$.keys.querySelector('[label="' + key + '"]');
       }
       
     });

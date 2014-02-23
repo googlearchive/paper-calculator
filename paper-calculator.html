@@ -25,7 +25,7 @@ license that can be found in the LICENSE file.
 <link rel="import" href="paper-calculator-keypad.html">
 <link rel="import" href="paper-calculator-math.html">
 
-<polymer-element name="paper-calculator" attributes="expression result wideMode responsiveWidth">
+<polymer-element name="paper-calculator" attributes="expression result wideMode responsiveWidth" tabindex="0">
 
   <template>
 
@@ -80,8 +80,8 @@ license that can be found in the LICENSE file.
       #resultInk.spill {
         -webkit-transform: scale(1);
         transform: scale(1);
-        -webkit-transition: -webkit-transform 0.5s ease-in-out;
-        transition: transform 0.5s ease-in-out;
+        -webkit-transition: -webkit-transform 0.38s ease-out;
+        transition: transform 0.38s ease-out;
       }
       
     </style>
@@ -121,29 +121,54 @@ license that can be found in the LICENSE file.
       expression: '',
       result: '',
       
+      eventDelegates: {
+        keydown: 'keyDown',
+        keypress: 'keyPress'
+      },
+      
       clear: function() {
         this.expression = '';
         this.result = '';
       },
       
+      del: function() {
+        this.expression = this.expression.slice(0, -1);
+      },
+      
       keyEnter: function(e) {
+        this.processKey(e.detail.key);
+      },
+      
+      keyDown: function(e) {
+        // backspace key
+        if (e.keyCode === 8) {
+          this.del();
+          e.preventDefault();
+        }
+      },
+      
+      keyPress: function(e) {
+        this.processKey(String.fromCharCode(e.keyCode));
+        e.preventDefault();
+      },
+      
+      processKey: function(k) {
         if (this.result) {
           this.clear();
         }
-        var k = e.detail.key;
         if (k === '=') {
-          this.updateResultInk(e.detail.node);
+          this.updateResultInk();
           this.$.math.eval();
         } else if (k === '<small>DEL</small>') {
-          this.clear();
+          this.del();
         } else {
           this.expression += k;
         }
       },
       
-      updateResultInk: function(keyNode) {
+      updateResultInk: function() {
         var rect = this.getBoundingClientRect();
-        var keyRect = keyNode.getBoundingClientRect();
+        var keyRect = this.$.keypad.equalKeyNode.getBoundingClientRect();
         var s  = this.$.resultInk.style;
         var t = keyRect.top - rect.top + keyRect.height / 2;
         s.top = -t + 'px';

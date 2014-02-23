@@ -118,11 +118,11 @@ license that can be found in the LICENSE file.
     
     <div id="panels" class="{{wideMatches ? 'wide-layout' : ''}}" touch-action="pan-y" on-pointerdown="{{inkSpill}}" on-pointerup="{{inkEvaporate}}" on-pointerleave="{{inkEvaporate}}">
       
-      <paper-calculator-keygrid class="standard" keys="{{standardKeys}}"></paper-calculator-keygrid>
+      <paper-calculator-keygrid id="standard" class="standard" keys="{{standardKeys}}"></paper-calculator-keygrid>
       
       <paper-calculator-keygrid id="advanced" on-transitionend="{{advancedTransitionEnd}}" class="advanced" keys="{{advancedKeys}}" on-trackstart="{{trackStart}}" on-track="{{track}}" on-trackend="{{trackEnd}}"></paper-calculator-keygrid>
       
-      <paper-ink id="ink" color="rgba(241, 250, 65, 0.85)" duration="280"></paper-ink>
+      <paper-ink id="ink" color="rgba(241, 250, 65, 0.85)" duration="180"></paper-ink>
       
     </div>
     
@@ -195,6 +195,10 @@ license that can be found in the LICENSE file.
       
       advancedTransitionEnd: function() {
         this.transitioning = false;
+      },
+      
+      get equalKeyNode() {
+        return this.$.standard.findKeyNode('=');
       }
       
     });
