@@ -7,8 +7,9 @@ license that can be found in the LICENSE file.
 <link rel="import" href="../polymer-selector/polymer-selector.html">
 <link rel="import" href="../paper-ink/paper-ink.html">
 <link rel="import" href="paper-calculator-keygrid.html">
+<link rel="import" href="paper-calculator-panels.html">
 
-<polymer-element name="paper-calculator-keypad" attributes="wideMatches standardKeys advancedKeys level transitioning">
+<polymer-element name="paper-calculator-keypad" attributes="wideMode standardKeys advancedKeys modeKeys level">
 
   <template>
 
@@ -20,26 +21,18 @@ license that can be found in the LICENSE file.
         overflow: hidden;
       }
       
-      #panels {
-        position: absolute;
-        top: 0;
-        right: 12px;
-        bottom: 0;
-        left: 0;
+      paper-calculator-panels {
+        width: 100%;
+        height: 100%;
+        background-color: #1de9b6;
         cursor: pointer;
       }
       
       .standard {
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        width: 100%;
         background-color: #4c4c4c;
         font-weight: 300;
         font-size: 2em;
         color: #fff;
-        transition: width 0.13s linear;
       }
       
       .standard ^ .column:nth-of-type(4) {
@@ -48,38 +41,29 @@ license that can be found in the LICENSE file.
       }
       
       .advanced {
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        left: 100%;
-        width: calc(75% + 12px);
         background-color: #40bd9e;
         font-weight: 400;
         font-size: 1.125em;
         color: #f7f7f7;
-        transition: left 0.13s linear, width 0.13s linear;
-        box-shadow: -1px 0 3px rgba(0, 0, 0, 0.3);
       }
       
-      .advanced.dragging {
-        box-shadow: -4px 0 6px rgba(0, 0, 0, 0.3);
+      .mode {
+        background-color: #1de9b6;
+        font-weight: 400;
+        font-size: 1em;
+        color: #666;
+      }
+      
+      .step {
+        box-shadow: -3px 0 3px -3px rgba(0, 0, 0, 0.25);
+      }
+      
+      .step.dragging, :not(.wide-layout) > .step.opened {
+        box-shadow: -10px 0 6px -6px rgba(0, 0, 0, 0.25);
+      }
+      
+      .step.dragging {
         transition: none;
-      }
-      
-      .advanced.polymer-selected {
-        box-shadow: -4px 0 6px rgba(0, 0, 0, 0.3);
-        left: 25%;
-      }
-      
-      .handle-bar {
-        position: absolute;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        width: 12px;
-        padding-left: 20px;
-        background-color: transparent;
-        cursor: pointer;
       }
       
       paper-ink {
@@ -92,43 +76,27 @@ license that can be found in the LICENSE file.
       }
       
       paper-ink ^ #inkOuter {
-        box-shadow: 2px 2px 3px 0px rgba(0,0,0,0.2);
+        box-shadow: 2px 2px 3px 0px rgba(0, 0, 0, 0.2);
       }
       
       paper-ink ^ #inkInner {
         background-color: #4c4c4c;
       }
       
-      /* wide layout */
-      #panels.wide-layout {
-        right: 0;
-      }
-      
-      #panels.wide-layout .standard {
-        width: calc(100% * 4 / 7);
-      }
-        
-      #panels.wide-layout .advanced {
-        left: calc(100% * 4 / 7);
-        width: calc(100% * 3 / 7);
-        box-shadow: none;
-      }
-      
     </style>
     
-    <div id="panels" class="{{wideMatches ? 'wide-layout' : ''}}" touch-action="pan-y" on-pointerdown="{{inkSpill}}" on-pointerup="{{inkEvaporate}}" on-pointerleave="{{inkEvaporate}}">
-      
-      <paper-calculator-keygrid id="standard" class="standard" keys="{{standardKeys}}"></paper-calculator-keygrid>
-      
-      <paper-calculator-keygrid id="advanced" on-transitionend="{{advancedTransitionEnd}}" class="advanced" keys="{{advancedKeys}}" on-trackstart="{{trackStart}}" on-track="{{track}}" on-trackend="{{trackEnd}}"></paper-calculator-keygrid>
-      
-      <paper-ink id="ink" color="rgba(241, 250, 65, 0.85)" duration="180"></paper-ink>
-      
-    </div>
+    <paper-calculator-panels class="{{wideMode ? 'wide-layout' : ''}}" selected="{{level}}" wideMode="{{wideMode}}" on-trackstart="{{trackStart}}" on-pointerdown="{{inkSpill}}" on-pointerup="{{inkEvaporate}}" on-pointerleave="{{inkEvaporate}}">
     
-    <div class="handle-bar" on-tap="{{toggleAdvanced}}" on-trackstart="{{trackStart}}" on-track="{{track}}" on-trackend="{{trackEnd}}"></div>
+      <paper-calculator-keygrid id="standard" class="standard" flex="1" keys="{{standardKeys}}"></paper-calculator-keygrid>
     
-    <polymer-selector target="{{$.panels}}" itemSelector="paper-calculator-keygrid" selected="{{level}}" notap></polymer-selector>
+      <paper-calculator-keygrid class="advanced step" flex="0.75" keys="{{advancedKeys}}"></paper-calculator-keygrid>
+      
+      <paper-calculator-keygrid class="mode step" flex="0.182" keys="{{modeKeys}}"></paper-calculator-keygrid>
+      
+    </paper-calculator-panels>
+    
+    <paper-ink id="ink" color="rgba(241, 250, 65, 0.85)" duration="180"></paper-ink>
+      
     
   </template>
 
@@ -137,44 +105,15 @@ license that can be found in the LICENSE file.
     Polymer('paper-calculator-keypad', {
       
       level: 0,
-      transitioning: false,
       
-      wideMatchesChanged: function() {
-        if (this.wideMatches) {
-          this.level = 0;
-        }
-      },
-      
-      trackStart: function(e) {
-        if (this.wideMatches) {
-          return;
-        }
+      trackStart: function() {
         this.$.ink.reset();
-        this._startx = this.$.advanced.offsetLeft;
-        this._w = this.$.panels.offsetWidth;
-        this.$.advanced.classList.add('dragging');
-        this.transitioning = true;
-        e.preventTap();
-      },
-      
-      track: function(e) {
-        if (this.wideMatches) {
-          return;
-        }
-        this.$.advanced.style.left = Math.min(this._w, 
-            Math.max(this._w * 0.25, this._startx + e.dx)) + 'px';
-      },
-      
-      trackEnd: function(e) {
-        if (this.wideMatches) {
-          return;
-        }
-        this.$.advanced.style.left = null;
-        this.$.advanced.classList.remove('dragging');
-        this.level = e.xDirection === -1 ? 1 : 0;
       },
       
       inkSpill: function(e) {
+        if (this.getBoundingClientRect().right - e.pageX < 30) {
+          return;
+        }
         var w = this.$.ink.offsetWidth / 2;
         this.$.ink.style.top = e.pageY - w + 'px';
         this.$.ink.style.left = e.pageX - w + 'px';
@@ -183,18 +122,6 @@ license that can be found in the LICENSE file.
       
       inkEvaporate: function() {
         this.$.ink.evaporateAfterSpillCompleted();
-      },
-      
-      toggleAdvanced: function(e) {
-        if (this.wideMatches) {
-          return;
-        }
-        this.transitioning = true;
-        this.level = this.level == 0 ? 1 : 0;
-      },
-      
-      advancedTransitionEnd: function() {
-        this.transitioning = false;
       },
       
       get equalKeyNode() {

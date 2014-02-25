@@ -1,0 +1,164 @@
+<!--
+Copyright 2014 The Toolkitchen Authors. All rights reserved.
+Use of this source code is governed by a BSD-style
+license that can be found in the LICENSE file.
+-->
+
+<link rel="import" href="../polymer-selector/polymer-selector.html">
+<link rel="import" href="../polymer-media-query/polymer-media-query.html">
+
+<polymer-element name="paper-calculator-panels" extends="polymer-selector" touch-action="pan-y" attributes="wideMode responsiveWidth defaultSelected margin">
+  <template>
+    
+    <style>
+    
+      :host {
+        display: block;
+        overflow: hidden;
+      }
+      
+      #panelContainer {
+        position: relative;
+        height: 100%;
+      }
+      
+      /*@polyfill #panelContainer > * */
+      ::content > * {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        transition: left 0.13s linear, width 0.13s linear;
+      }
+      
+      /*@polyfill :host.dragging > #panelContainer > * */
+      :host(.dragging) ::content > * {
+        transition: none;
+      }
+      
+    </style>
+    
+    <div id="panelContainer">
+      <shadow></shadow>
+    </div>
+    
+    <polymer-media-query query="min-width: {{responsiveWidth}}" queryMatches="{{wideMode}}"></polymer-media-query>
+    
+  </template>
+  
+  <script>
+  
+    Polymer('paper-calculator-panels', {
+      
+      margin: '12px',
+      defaultSelected: 0,
+      wideMode: false,
+      responsiveWidth: '',
+      notap: true,
+      
+      eventDelegates: {
+        trackstart: 'trackStart',
+        track: 'track',
+        trackend: 'trackEnd'
+      },
+      
+      attached: function() {
+        this.marginChanged();
+        this.layout();
+      },
+      
+      marginChanged: function() {
+        this.$.panelContainer.style.width = 'calc(100% - ' + this.margin + ')';
+      },
+      
+      layout: function() {
+        var t = 0;
+        this.items.forEach(function(item) {
+          var flex = Number(item.getAttribute('flex'));
+          item.flex = flex;
+          t += flex;
+        });
+        var wm = this.wideMode;
+        var l = 0;
+        this.items.forEach(function(item) {
+          var flex = item.flex;
+          item.style.left = (wm ? l/t : (1 - flex)) * 100 + '%';
+          item.style.width = (wm ? flex / t : flex) * 100 + '%';
+          l += flex;
+        });
+      },
+      
+      wideModeChanged: function() {
+        this.layout();
+        var olds = this.selected;
+        this.selected = this.defaultSelected;
+        if (olds == this.selected) {
+          this.selectedIndexChanged();
+        }
+      },
+      
+      selectedIndexChanged: function(old) {
+        if (this.wideMode) {
+          return;
+        }
+        var l = 0;
+        for (var i = 0; i < this.items.length; i++) {
+          var flex = this.items[i].flex;
+          this.items[i].style.left = l * 100 + '%';
+          this.items[i].classList.toggle('opened', i <= this.selectedIndex);
+          l = (i < this.selectedIndex ? 1 - this.items[i+1].flex : l + flex);
+        }
+      },
+      
+      trackStart: function(e) {
+        if (this.wideMode) {
+          return;
+        }
+        var i = this.findDistributedTarget(e.target, this.items);
+        this._draggable = i > 0;
+        if (i >= 0) {
+          this.dragIndex = i;
+          this.dragItem = this.items[i];
+          this.dragItem.classList.add('dragging');
+          
+          var w = this.$.panelContainer.offsetWidth;
+          var b = this.dragIndex > this.selectedIndex;
+          this._min = b ? -this.dragItem.flex * w : 0;
+          this._max = b ? 0 : this.dragItem.flex * w;
+          
+          this.items.forEach(function(item) {
+            item._x = item.offsetLeft;
+          });
+          
+          this.classList.add('dragging');
+          e.preventTap();
+        }
+      },
+      
+      track: function(e) {
+        if (this.wideMode || !this._draggable) {
+          return;
+        }
+        var x = Math.max(this._min, Math.min(this._max, e.dx));
+        for (var i = this.dragIndex; i < this.items.length; i++) {
+          this.items[i].style.left =  this.items[i]._x + x + 'px';
+        }
+      },
+      
+      trackEnd: function(e) {
+        if (this.wideMode || !this._draggable) {
+          return;
+        }
+        this.classList.remove('dragging');
+        this.dragItem.classList.remove('dragging');
+        var olds = this.selected;
+        this.selected = this.dragIndex - (e.xDirection === -1 ? 0 : 1);
+        if (olds == this.selected) {
+          this.selectedIndexChanged();
+        }
+      }
+      
+    });
+    
+  </script>
+  
+</polymer-element>

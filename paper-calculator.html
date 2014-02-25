@@ -42,7 +42,7 @@ license that can be found in the LICENSE file.
         -ms-user-select: none;
         user-select: none;
         
-        -webkit-tap-highlight-color: rgba(0,0,0,0);
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
         -webkit-touch-callout: none;
         -webkit-font-smoothing: antialiased;
       }
@@ -54,12 +54,16 @@ license that can be found in the LICENSE file.
         width: 100%;
         height: 38%;
         z-index: 1;
-        box-shadow: 0 6px 4px -2px rgba(0,0,0,0.35);
-        transition: box-shadow 0.1s ease;
+        box-shadow: 0 8px 4px -4px rgba(0, 0, 0, 0.3);
+        transition: box-shadow 0.1s ease-out;
       }
       
-      #output.level1, #output.level0.transitioning {
-        box-shadow: 0 8px 6px -2px rgba(0,0,0,0.35);
+      #output.level1 {
+        box-shadow: 0 11px 6px -4px rgba(0, 0, 0, 0.3);
+      }
+      
+      #output.level2 {
+        box-shadow: 0 13px 8px -4px rgba(0, 0, 0, 0.3);
       }
       
       #keypad {
@@ -88,9 +92,9 @@ license that can be found in the LICENSE file.
     
     <div id="resultInk" class="{{result ? 'spill' : ''}}"></div>
     
-    <paper-calculator-output id="output" expression="{{expression}}" result="{{result}}" class="level{{level}} {{transitioning ? 'transitioning' : ''}}"></paper-calculator-output>
+    <paper-calculator-output id="output" expression="{{expression}}" result="{{result}}" class="level{{level}}"></paper-calculator-output>
     
-    <paper-calculator-keypad id="keypad" wideMatches="{{wideMatches || wideMode}}" standardKeys="{{standardKeys}}" advancedKeys="{{advancedKeys}}" level="{{level}}" transitioning="{{transitioning}}" on-keyenter="{{keyEnter}}"></paper-calculator-keypad>
+    <paper-calculator-keypad id="keypad" wideMode="{{wideMatches || wideMode}}" standardKeys="{{standardKeys}}" advancedKeys="{{advancedKeys}}" modeKeys="{{modeKeys}}" level="{{level}}" on-keyenter="{{keyEnter}}"></paper-calculator-keypad>
     
     <paper-calculator-math id="math" expression="{{expression}}" result="{{result}}"></paper-calculator-math>
     
@@ -116,10 +120,15 @@ license that can be found in the LICENSE file.
         ['%', 'y&#8319;', 'log', 'ln', 'e&#8319', 'Rand']
       ],
       
+      modeKeys: [
+        ['Deg', 'Rad', 'func', 'Table', 'Graph', '']
+      ],
+      
       wideMode: false,
       responsiveWidth: '',
       expression: '',
       result: '',
+      level: 0,
       
       eventDelegates: {
         keydown: 'keyDown',

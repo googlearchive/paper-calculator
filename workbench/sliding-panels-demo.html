@@ -1,0 +1,71 @@
+<!doctype html>
+<html>
+<head>
+
+  <title>Sliding Panels Demo</title>
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+
+  <script src="../../platform/platform.js"></script>
+  
+  <link rel="import" href="../paper-calculator-panels.html">
+  <link rel="import" href="../../font-roboto2/roboto2.html">
+
+  <style>
+  
+    body, html {
+      height: 100%;
+    }
+  
+    body {
+      font-family: Roboto2, 'Helvetica Neue', Helvetica, Arial;
+      margin: 0;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      
+      -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+      -webkit-touch-callout: none;
+    }
+    
+    paper-calculator-panels {
+      width: 100%;
+      height: 100%;
+      background-color: #9c27b0;
+      font-size: 20px;
+      color: #ddd;
+    }
+    
+    #panel1 {
+      background-color: #3f51b8;
+    }
+    
+    #panel2 {
+      background-color: #009688;
+    }
+    
+    #panel3 {
+      background-color: #ff5722;
+    }
+    
+    #panel4 {
+      background-color: #9c27b0;
+    }
+    
+  </style>
+
+</head>
+<body unresolved>
+
+  <paper-calculator-panels selected="0" margin="40px" responsiveWidth="1000px">
+    <div id="panel1" flex="1">panel1</div>
+    <div id="panel2" flex="1">panel2</div>
+    <div id="panel3" flex="0.5">panel3</div>
+    <div id="panel4" flex="0.25">panel4</div>
+  </paper-calculator-panels>
+  
+</body>
+</html>
