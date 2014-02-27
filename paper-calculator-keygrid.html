@@ -12,7 +12,28 @@ license that can be found in the LICENSE file.
   
     <link rel="stylesheet" href="../polymer-flex-layout/polymer-flex-layout.css">
     
-    <div id="keys" class="flexbox flex">
+    <style>
+    
+      :host {
+        position: relative;
+      }
+      
+      #keys {
+        width: 100%;
+        height: 100%;
+      }
+      
+      .handle-bar {
+        position: absolute;
+        top: 0;
+        left: -20px;
+        bottom: 0;
+        width: 20px;
+      }
+    
+    </style>
+    
+    <div id="keys" class="flexbox">
     
       <template repeat="{{col in keys}}">
       
@@ -20,7 +41,7 @@ license that can be found in the LICENSE file.
         
           <template repeat="{{col}}">
           
-            <paper-calculator-key class="flexbox justify-center align-center flex" label="{{}}" on-tap="{{keyEnter}}"></paper-calculator-key>
+            <paper-calculator-key class="flexbox justify-center align-center flex" label="{{}}" on-tap="{{keyEnter}}" on-pointerdown="{{keyDown}}"></paper-calculator-key>
             
           </template>
           
@@ -30,18 +51,20 @@ license that can be found in the LICENSE file.
       
     </div>
     
+    <div class="handle-bar"></div>
+    
   </template>
   
   <script>
   
     Polymer('paper-calculator-keygrid', {
       
-      ready: function() {
-        this.classList.add('flexbox');
+      keyEnter: function(e) {
+        this.fire('cal-keyenter', {key: e.target.templateInstance.model});
       },
       
-      keyEnter: function(e) {
-        this.fire('keyenter', {key: e.target.templateInstance.model});
+      keyDown: function(e) {
+        this.fire('cal-keydown', {keyNode: e.target});
       },
       
       findKeyNode: function(key) {

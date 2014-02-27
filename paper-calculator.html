@@ -63,7 +63,7 @@ license that can be found in the LICENSE file.
       }
       
       #output.level2 {
-        box-shadow: 0 13px 8px -4px rgba(0, 0, 0, 0.3);
+        box-shadow: 0 13px 6px -4px rgba(0, 0, 0, 0.3);
       }
       
       #keypad {
@@ -84,8 +84,8 @@ license that can be found in the LICENSE file.
       #resultInk.spill {
         -webkit-transform: scale(1);
         transform: scale(1);
-        -webkit-transition: -webkit-transform 0.38s ease-out;
-        transition: transform 0.38s ease-out;
+        -webkit-transition: -webkit-transform 0.38s ease-out 0.2s;
+        transition: transform 0.38s ease-out 0.2s;
       }
       
     </style>
@@ -94,7 +94,7 @@ license that can be found in the LICENSE file.
     
     <paper-calculator-output id="output" expression="{{expression}}" result="{{result}}" class="level{{level}}"></paper-calculator-output>
     
-    <paper-calculator-keypad id="keypad" wideMode="{{wideMatches || wideMode}}" standardKeys="{{standardKeys}}" advancedKeys="{{advancedKeys}}" modeKeys="{{modeKeys}}" level="{{level}}" on-keyenter="{{keyEnter}}"></paper-calculator-keypad>
+    <paper-calculator-keypad id="keypad" wideMode="{{wideMatches || wideMode}}" standardKeys="{{standardKeys}}" advancedKeys="{{advancedKeys}}" modeKeys="{{modeKeys}}" level="{{level}}" on-cal-keyenter="{{keyEnter}}"></paper-calculator-keypad>
     
     <paper-calculator-math id="math" expression="{{expression}}" result="{{result}}"></paper-calculator-math>
     
@@ -145,7 +145,10 @@ license that can be found in the LICENSE file.
       },
       
       keyEnter: function(e) {
-        this.processKey(e.detail.key);
+        var k = e.detail.key;
+        if (this.modeKeys[0].indexOf(k) < 0) {
+          this.processKey(k);
+        }
       },
       
       keyDown: function(e) {
