@@ -8,12 +8,27 @@ license that can be found in the LICENSE file.
 
 <polymer-element name="paper-calculator-key" attributes="label">
 
+  <template>
+  
+    <style>
+    
+      :host(.active) #keyLabel {
+        z-index: 1;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.13);
+      }
+    
+    </style>
+  
+    <div id="keyLabel"></div>
+  
+  </template>
+
   <script>
   
     Polymer('paper-calculator-key', {
       
       labelChanged: function() {
-        this.innerHTML = this.label;
+        this.$.keyLabel.innerHTML = this.label;
       }
     
     });

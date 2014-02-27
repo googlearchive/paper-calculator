@@ -84,11 +84,11 @@ license that can be found in the LICENSE file.
         background-color: #4c4c4c;
       }
       
-      paper-ink.level1 ^ #inkInner {
+      paper-ink.keys1 ^ #inkInner {
         background-color: #40bd9e;
       }
       
-      paper-ink.level2 ^ #inkInner {
+      paper-ink.keys2 ^ #inkInner {
         background-color: #1de9b6;
       }
       
@@ -104,7 +104,7 @@ license that can be found in the LICENSE file.
       
     </paper-calculator-panels>
     
-    <paper-ink id="ink" color="rgba(241, 250, 65, 0.85)" duration="300" class="level{{level}}"></paper-ink>
+    <paper-ink id="ink" color="rgba(241, 250, 65, 0.85)" duration="240" class="keys{{activatedKeys}}" on-paper-ink-evaporate-complete="{{resetInk}}"></paper-ink>
       
     
   </template>
@@ -115,10 +115,18 @@ license that can be found in the LICENSE file.
       
       resetInk: function() {
         this.$.ink.reset();
+        if (this.keyNode) {
+          this.keyNode.classList.remove('active');
+        }
       },
       
       inkSpill: function(e) {
-        var rect = e.detail.keyNode.getBoundingClientRect();
+        this.activatedKeys = [this.standardKeys, this.advancedKeys, 
+            this.modeKeys].indexOf(e.target.keys);
+        this.resetInk();
+        this.keyNode = e.detail.keyNode;
+        this.keyNode.classList.add('active');
+        var rect = this.keyNode.getBoundingClientRect();
         var x = rect.left + rect.width / 2;
         var y = rect.top + rect.height / 2;
         var w = this.$.ink.offsetWidth / 2;
