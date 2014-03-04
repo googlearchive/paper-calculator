@@ -41,7 +41,7 @@ license that can be found in the LICENSE file.
         
           <template repeat="{{col}}">
           
-            <paper-calculator-key class="flexbox justify-center align-center flex" label="{{}}" on-tap="{{keyEnter}}" on-pointerdown="{{keyDown}}"></paper-calculator-key>
+            <paper-calculator-key class="flex" label="{{}}" on-tap="{{keyTap}}"></paper-calculator-key>
             
           </template>
           
@@ -59,16 +59,12 @@ license that can be found in the LICENSE file.
   
     Polymer('paper-calculator-keygrid', {
       
-      keyEnter: function(e) {
-        this.fire('cal-keyenter', {key: e.target.templateInstance.model});
+      keyTap: function(e) {
+        this.fire('cal-keytap', {key: e.target.templateInstance.model});
       },
       
-      keyDown: function(e) {
-        this.fire('cal-keydown', {keyNode: e.target});
-      },
-      
-      findKeyNode: function(key) {
-        return this.$.keys.querySelector('[label="' + key + '"]');
+      findKey: function(label) {
+        return this.$.keys.querySelector('[label="' + label + '"]');
       }
       
     });

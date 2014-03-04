@@ -54,16 +54,16 @@ license that can be found in the LICENSE file.
         width: 100%;
         height: 38%;
         z-index: 1;
-        box-shadow: 0 8px 4px -4px rgba(0, 0, 0, 0.3);
+        box-shadow: 0 5px 4px rgba(0, 0, 0, 0.3);
         transition: box-shadow 0.1s ease-out;
       }
       
       #output.level1 {
-        box-shadow: 0 11px 6px -4px rgba(0, 0, 0, 0.3);
+        box-shadow: 0 8px 6px rgba(0, 0, 0, 0.3);
       }
       
       #output.level2 {
-        box-shadow: 0 13px 6px -4px rgba(0, 0, 0, 0.3);
+        box-shadow: 0 10px 8px rgba(0, 0, 0, 0.3);
       }
       
       #keypad {
@@ -94,7 +94,7 @@ license that can be found in the LICENSE file.
     
     <paper-calculator-output id="output" expression="{{expression}}" result="{{result}}" class="level{{level}}"></paper-calculator-output>
     
-    <paper-calculator-keypad id="keypad" wideMode="{{wideMatches || wideMode}}" standardKeys="{{standardKeys}}" advancedKeys="{{advancedKeys}}" modeKeys="{{modeKeys}}" level="{{level}}" on-cal-keyenter="{{keyEnter}}"></paper-calculator-keypad>
+    <paper-calculator-keypad id="keypad" wideMode="{{wideMatches || wideMode}}" standardKeys="{{standardKeys}}" advancedKeys="{{advancedKeys}}" modeKeys="{{modeKeys}}" level="{{level}}" on-cal-keytap="{{keyTap}}"></paper-calculator-keypad>
     
     <paper-calculator-math id="math" expression="{{expression}}" result="{{result}}"></paper-calculator-math>
     
@@ -144,7 +144,12 @@ license that can be found in the LICENSE file.
         this.expression = this.expression.slice(0, -1);
       },
       
-      keyEnter: function(e) {
+      eval: function() {
+        this.updateResultInk();
+        this.$.math.eval();
+      },
+      
+      keyTap: function(e) {
         var k = e.detail.key;
         if (this.modeKeys[0].indexOf(k) < 0) {
           this.processKey(k);
@@ -160,7 +165,18 @@ license that can be found in the LICENSE file.
       },
       
       keyPress: function(e) {
-        this.processKey(String.fromCharCode(e.keyCode));
+        var c = e.keyCode, k;
+        // enter key
+        if (c === 13) {
+          k = '=';
+        } else {
+          k = String.fromCharCode(c);
+        }
+        var key = this.$.keypad.findKey(k);
+        if (key) {
+          key.inking();
+        }
+        this.processKey(k);
         e.preventDefault();
       },
       
@@ -169,8 +185,7 @@ license that can be found in the LICENSE file.
           this.clear();
         }
         if (k === '=') {
-          this.updateResultInk();
-          this.$.math.eval();
+          this.eval();
         } else if (k === '<small>DEL</small>') {
           this.del();
         } else {
@@ -180,7 +195,7 @@ license that can be found in the LICENSE file.
       
       updateResultInk: function() {
         var rect = this.getBoundingClientRect();
-        var keyRect = this.$.keypad.equalKeyNode.getBoundingClientRect();
+        var keyRect = this.$.keypad.equalKey.getBoundingClientRect();
         var s  = this.$.resultInk.style;
         var t = keyRect.top - rect.top + keyRect.height / 2;
         s.top = -t + 'px';

@@ -26,8 +26,10 @@ license that can be found in the LICENSE file.
       ::content > * {
         position: absolute;
         top: 0;
+        right: 0;
         bottom: 0;
-        transition: left 0.13s linear, width 0.13s linear;
+        transition: -webkit-transform 0.13s linear, width 0.13s linear;
+        transition: transform 0.13s linear, width 0.13s linear;
       }
       
       /*@polyfill :host.dragging > #panelContainer > * */
@@ -37,7 +39,7 @@ license that can be found in the LICENSE file.
       
     </style>
     
-    <div id="panelContainer">
+    <div id="panelContainer" class="{{wideMode ? 'wide-layout' : '' }}">
       <shadow></shadow>
     </div>
     
@@ -77,84 +79,92 @@ license that can be found in the LICENSE file.
           item.flex = flex;
           t += flex;
         });
-        var wm = this.wideMode;
         var l = 0;
-        this.items.forEach(function(item) {
+        for (var i = this.items.length-1; i >= 0; i--) {
+          var item = this.items[i];
           var flex = item.flex;
-          item.style.left = (wm ? l/t : (1 - flex)) * 100 + '%';
-          item.style.width = (wm ? flex / t : flex) * 100 + '%';
+          item.style.width = (this.wideMode ? flex / t : flex) * 100 + '%';
+          this.positionPanel(item, (this.wideMode ? -l / flex : 0) * 100  + '%');
           l += flex;
-        });
+        }
       },
       
       wideModeChanged: function() {
         this.layout();
-        var olds = this.selected;
-        this.selected = this.defaultSelected;
-        if (olds == this.selected) {
+        this.setSelectedAlways(this.defaultSelected);
+      },
+      
+      setSelectedAlways: function(selected) {
+        var old = this.selected;
+        this.selected = selected;
+        if (old == this.selected) {
           this.selectedIndexChanged();
         }
       },
       
-      selectedIndexChanged: function(old) {
+      selectedIndexChanged: function() {
         if (this.wideMode) {
           return;
         }
         var l = 0;
         for (var i = 0; i < this.items.length; i++) {
-          var flex = this.items[i].flex;
-          this.items[i].style.left = l * 100 + '%';
-          this.items[i].classList.toggle('opened', i <= this.selectedIndex);
-          l = (i < this.selectedIndex ? 1 - this.items[i+1].flex : l + flex);
+          var item = this.items[i];
+          var flex = item.flex;
+          this.positionPanel(item, l / flex * 100 + '%');
+          item.classList.toggle('opened', i <= this.selectedIndex);
+          var next = this.items[i + 1];
+          l += i < this.selectedIndex ? 0 : (next && next.flex);
         }
+      },
+      
+      positionPanel: function(panel, x) {
+        panel._x = x;
+        var s = panel.style;
+        s.webkitTransform = s.transform = 'translate3d(' + x + ',0,0)';
       },
       
       trackStart: function(e) {
-        if (this.wideMode) {
+        var i = this.findDistributedTarget(e.target, this.items);
+        this.dragDisabled = this.wideMode || i <= 0;
+        if (this.dragDisabled) {
           return;
         }
-        var i = this.findDistributedTarget(e.target, this.items);
-        this._draggable = i > 0;
-        if (i >= 0) {
-          this.dragIndex = i;
-          this.dragItem = this.items[i];
-          this.dragItem.classList.add('dragging');
-          
-          var w = this.$.panelContainer.offsetWidth;
-          var b = this.dragIndex > this.selectedIndex;
-          this._min = b ? -this.dragItem.flex * w : 0;
-          this._max = b ? 0 : this.dragItem.flex * w;
-          
-          this.items.forEach(function(item) {
-            item._x = item.offsetLeft;
-          });
-          
-          this.classList.add('dragging');
-          e.preventTap();
-        }
+        this.dragIndex = i;
+        this.dragItem = this.items[i];
+        
+        var w = this.$.panelContainer.offsetWidth;
+        var b = this.dragIndex > this.selectedIndex;
+        this._min = b ? -this.dragItem.flex * w : 0;
+        this._max = b ? 0 : this.dragItem.flex * w;
+        
+        this.items.forEach(function(item) {
+          var x = item._x;
+          item._startx = (x.slice(-1) === '%' ? 
+              item.offsetWidth / 100 : 1) * parseFloat(x, 10);
+        });
+        
+        this.classList.add('dragging');
+        this.dragItem.classList.add('dragging');
+        e.preventTap();
       },
       
       track: function(e) {
-        if (this.wideMode || !this._draggable) {
+        if (this.dragDisabled) {
           return;
         }
         var x = Math.max(this._min, Math.min(this._max, e.dx));
         for (var i = this.dragIndex; i < this.items.length; i++) {
-          this.items[i].style.left =  this.items[i]._x + x + 'px';
+          this.positionPanel(this.items[i], this.items[i]._startx + x + 'px');
         }
       },
       
       trackEnd: function(e) {
-        if (this.wideMode || !this._draggable) {
+        if (this.dragDisabled) {
           return;
         }
         this.classList.remove('dragging');
         this.dragItem.classList.remove('dragging');
-        var olds = this.selected;
-        this.selected = this.dragIndex - (e.xDirection === -1 ? 0 : 1);
-        if (olds == this.selected) {
-          this.selectedIndexChanged();
-        }
+        this.setSelectedAlways(this.dragIndex - (e.xDirection === -1 ? 0 : 1));
       }
       
     });

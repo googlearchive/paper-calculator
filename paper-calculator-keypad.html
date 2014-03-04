@@ -5,7 +5,6 @@ license that can be found in the LICENSE file.
 -->
 
 <link rel="import" href="../polymer-selector/polymer-selector.html">
-<link rel="import" href="../paper-ink/paper-ink.html">
 <link rel="import" href="paper-calculator-keygrid.html">
 <link rel="import" href="paper-calculator-panels.html">
 
@@ -29,83 +28,71 @@ license that can be found in the LICENSE file.
         cursor: pointer;
       }
       
-      .standard {
+      #standard {
         background-color: #4c4c4c;
         font-weight: 300;
         font-size: 2em;
         color: #fff;
       }
       
-      .standard ^ .column:nth-of-type(4) {
+      #standard ^ .column:nth-of-type(4) {
         background-color: #666;
         border-left: 1px solid #444;
       }
       
-      .advanced {
+      #advanced {
         background-color: #40bd9e;
         font-weight: 400;
         font-size: 1.125em;
         color: #f7f7f7;
       }
       
-      .mode {
+      #mode {
         background-color: #1de9b6;
         font-weight: 400;
         font-size: 1em;
         color: #777;
       }
       
-      .step {
+      #advanced, #mode {
         box-shadow: -3px 0 3px -3px rgba(0, 0, 0, 0.25);
       }
       
-      .step.dragging, paper-calculator-panels.narrow-layout .step.opened {
-        box-shadow: -10px 0 6px -6px rgba(0, 0, 0, 0.25);
+      #advanced.dragging, paper-calculator-panels.narrow-layout #advanced.opened {
+        box-shadow: 0 0 0 6px #40bd9e, -10px 0 6px rgba(0, 0, 0, 0.25);
+      }
+      
+      #mode.dragging, paper-calculator-panels.narrow-layout #mode.opened {
+        box-shadow: 0 0 0 6px #1de9b6, -10px 0 6px rgba(0, 0, 0, 0.25);
       }
       
       .step.dragging {
         transition: none;
       }
       
-      paper-ink {
-        position: fixed;
-        width: 60px;
-        height: 60px;
-        pointer-events: none;
-        -webkit-transform: translateZ(0);
-        transform: translateZ(0);
-      }
-      
-      paper-ink ^ #inkOuter {
-        box-shadow: 2px 2px 3px 0px rgba(0, 0, 0, 0.2);
-      }
-      
-      paper-ink ^ #inkInner {
+      #standard ^^ paper-ink ^ #inkInner {
         background-color: #4c4c4c;
       }
       
-      paper-ink.keys1 ^ #inkInner {
+      #advanced ^^ paper-ink ^ #inkInner {
         background-color: #40bd9e;
       }
       
-      paper-ink.keys2 ^ #inkInner {
+      #mode ^^ paper-ink ^ #inkInner {
         background-color: #1de9b6;
       }
       
     </style>
     
-    <paper-calculator-panels class="{{wideMode ? 'wide-layout' : 'narrow-layout'}}" selected="{{level}}" wideMode="{{wideMode}}" on-trackstart="{{resetInk}}" on-cal-keydown="{{inkSpill}}" on-pointerup="{{inkEvaporate}}" on-pointerleave="{{inkEvaporate}}">
+    <paper-calculator-panels class="{{wideMode ? 'wide-layout' : 'narrow-layout'}}" selected="{{level}}" wideMode="{{wideMode}}">
     
-      <paper-calculator-keygrid id="standard" class="standard" flex="1" keys="{{standardKeys}}"></paper-calculator-keygrid>
+      <paper-calculator-keygrid id="standard" flex="1" keys="{{standardKeys}}"></paper-calculator-keygrid>
     
-      <paper-calculator-keygrid class="advanced step" flex="0.75" keys="{{advancedKeys}}"></paper-calculator-keygrid>
+      <paper-calculator-keygrid id ="advanced" flex="0.75" keys="{{advancedKeys}}"></paper-calculator-keygrid>
       
-      <paper-calculator-keygrid class="mode step" flex="0.182" keys="{{modeKeys}}"></paper-calculator-keygrid>
+      <paper-calculator-keygrid id="mode" flex="0.182" keys="{{modeKeys}}"></paper-calculator-keygrid>
       
     </paper-calculator-panels>
-    
-    <paper-ink id="ink" color="rgba(241, 250, 65, 0.85)" duration="240" class="keys{{activatedKeys}}" on-paper-ink-evaporate-complete="{{resetInk}}"></paper-ink>
-      
     
   </template>
 
@@ -113,34 +100,18 @@ license that can be found in the LICENSE file.
 
     Polymer('paper-calculator-keypad', {
       
-      resetInk: function() {
-        this.$.ink.reset();
-        if (this.keyNode) {
-          this.keyNode.classList.remove('active');
+      findKey: function(label) {
+        var ps = [this.$.standard, this.$.advanced, this.$.mode];
+        for (var i = 0, p; p = ps[i]; i++) {
+          var key = p.findKey(label);
+          if (key) {
+            return key;
+          }
         }
       },
       
-      inkSpill: function(e) {
-        this.activatedKeys = [this.standardKeys, this.advancedKeys, 
-            this.modeKeys].indexOf(e.target.keys);
-        this.resetInk();
-        this.keyNode = e.detail.keyNode;
-        this.keyNode.classList.add('active');
-        var rect = this.keyNode.getBoundingClientRect();
-        var x = rect.left + rect.width / 2;
-        var y = rect.top + rect.height / 2;
-        var w = this.$.ink.offsetWidth / 2;
-        this.$.ink.style.top = y - w + 'px';
-        this.$.ink.style.left = x - w + 'px';
-        this.$.ink.spill();
-      },
-      
-      inkEvaporate: function() {
-        this.$.ink.evaporateAfterSpillCompleted();
-      },
-      
-      get equalKeyNode() {
-        return this.$.standard.findKeyNode('=');
+      get equalKey() {
+        return this.$.standard.findKey('=');
       }
       
     });

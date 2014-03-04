@@ -4,22 +4,70 @@ Use of this source code is governed by a BSD-style
 license that can be found in the LICENSE file.
 -->
 
-<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../paper-ink/paper-ink.html">
 
-<polymer-element name="paper-calculator-key" attributes="label">
+<polymer-element name="paper-calculator-key" attributes="label" 
+    on-trackstart="{{resetInk}}" on-pointerdown="{{inkSpill}}" on-pointerup="{{inkEvaporate}}" on-pointerleave="{{inkEvaporate}}">
 
   <template>
   
+    <link rel="stylesheet" href="../polymer-flex-layout/polymer-flex-layout.css">
+  
     <style>
     
-      :host(.active) #keyLabel {
-        z-index: 1;
+      :host {
+        position: relative;
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0);
+      }
+    
+      #keyLabel, .ink-container {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0);
+      }
+      
+      #keyLabel.active {
         text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.13);
+        z-index: 1;
+      }
+      
+      .ink-container {
+        pointer-events: none;
+      }
+      
+      .ink-center {
+        position: relative;
+        width: 0;
+        height: 0;
+      }
+      
+      paper-ink {
+        position: absolute;
+        top: -30px;
+        left: -30px;
+        width: 60px;
+        height: 60px;
+        pointer-events: none;
+      }
+      
+      paper-ink ^ #inkOuter {
+        box-shadow: 2px 2px 3px 0px rgba(0, 0, 0, 0.2);
       }
     
     </style>
   
-    <div id="keyLabel"></div>
+    <div id="keyLabel" class="flexbox justify-center align-center {{active ? 'active' : ''}}"></div>
+    
+    <div class="ink-container flexbox justify-center align-center">
+      <div class="ink-center">
+        <paper-ink id="ink" color="rgba(241, 250, 65, 0.85)" duration="320" on-paper-ink-evaporate-complete="{{resetInk}}"></paper-ink>
+      </div>
+    </div>
   
   </template>
 
@@ -29,6 +77,25 @@ license that can be found in the LICENSE file.
       
       labelChanged: function() {
         this.$.keyLabel.innerHTML = this.label;
+      },
+      
+      resetInk: function() {
+        this.active = false;
+        this.$.ink.reset();
+      },
+      
+      inkSpill: function(e) {
+        this.active = true;
+        this.$.ink.spill();
+      },
+      
+      inkEvaporate: function() {
+        this.$.ink.evaporateAfterSpillCompleted();
+      },
+      
+      inking: function() {
+        this.inkSpill();
+        this.inkEvaporate();
       }
     
     });
