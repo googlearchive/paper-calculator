@@ -4,10 +4,10 @@ Use of this source code is governed by a BSD-style
 license that can be found in the LICENSE file.
 -->
 
-<link rel="import" href="../polymer-selector/polymer-selector.html">
-<link rel="import" href="../polymer-media-query/polymer-media-query.html">
+<link rel="import" href="../core-selector/core-selector.html">
+<link rel="import" href="../core-media-query/core-media-query.html">
 
-<polymer-element name="paper-calculator-panels" extends="polymer-selector" touch-action="pan-y" attributes="wideMode responsiveWidth defaultSelected margin">
+<polymer-element name="paper-calculator-panels" extends="core-selector" touch-action="pan-y" attributes="wideMode responsiveWidth defaultSelected margin">
   <template>
     
     <style>
@@ -43,7 +43,7 @@ license that can be found in the LICENSE file.
       <shadow></shadow>
     </div>
     
-    <polymer-media-query query="min-width: {{responsiveWidth}}" queryMatches="{{wideMode}}"></polymer-media-query>
+    <core-media-query query="min-width: {{responsiveWidth}}" queryMatches="{{wideMode}}"></core-media-query>
     
   </template>
   

@@ -20,7 +20,7 @@ license that can be found in the LICENSE file.
  */
 -->
 
-<link rel="import" href="../polymer-media-query/polymer-media-query.html">
+<link rel="import" href="../core-media-query/core-media-query.html">
 <link rel="import" href="paper-calculator-output.html">
 <link rel="import" href="paper-calculator-keypad.html">
 <link rel="import" href="paper-calculator-math.html">
@@ -89,7 +89,7 @@ license that can be found in the LICENSE file.
     
     <paper-calculator-math id="math" expression="{{expression}}" result="{{result}}"></paper-calculator-math>
     
-    <polymer-media-query query="min-width: {{responsiveWidth}}" queryMatches="{{wideMatches}}"></polymer-media-query>
+    <core-media-query query="min-width: {{responsiveWidth}}" queryMatches="{{wideMatches}}"></core-media-query>
     
   </template>
 
