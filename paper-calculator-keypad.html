@@ -40,6 +40,14 @@ license that can be found in the LICENSE file.
         border-left: 1px solid #444;
       }
       
+      .level1 #standard {
+         box-shadow: inset 0 8px 6px rgba(0, 0, 0, 0.3);
+      }
+      
+      .level2 #standard {
+         box-shadow: inset 0 11px 8px rgba(0, 0, 0, 0.3);
+      }
+      
       #advanced {
         background-color: #40bd9e;
         font-weight: 400;
@@ -59,11 +67,15 @@ license that can be found in the LICENSE file.
       }
       
       #advanced.dragging, paper-calculator-panels.narrow-layout #advanced.opened {
-        box-shadow: 0 0 0 6px #40bd9e, -10px 0 6px rgba(0, 0, 0, 0.25);
+        box-shadow: -4px 0 4px rgba(0, 0, 0, 0.25);
+      }
+      
+      .level2 #advanced.dragging, paper-calculator-panels.narrow-layout.level2 #advanced.opened {
+        box-shadow: -4px 0 4px rgba(0, 0, 0, 0.25), inset 0 9px 8px rgba(0, 0, 0, 0.25);
       }
       
       #mode.dragging, paper-calculator-panels.narrow-layout #mode.opened {
-        box-shadow: 0 0 0 6px #1de9b6, -10px 0 6px rgba(0, 0, 0, 0.25);
+        box-shadow: -4px 0 4px rgba(0, 0, 0, 0.25);
       }
       
       .step.dragging {
@@ -84,7 +96,7 @@ license that can be found in the LICENSE file.
       
     </style>
     
-    <paper-calculator-panels class="{{wideMode ? 'wide-layout' : 'narrow-layout'}}" selected="{{level}}" wideMode="{{wideMode}}">
+    <paper-calculator-panels class="{{wideMode ? 'wide-layout' : 'narrow-layout'}} level{{level}}" selected="{{level}}" wideMode="{{wideMode}}">
     
       <paper-calculator-keygrid id="standard" flex="1" keys="{{standardKeys}}"></paper-calculator-keygrid>
     

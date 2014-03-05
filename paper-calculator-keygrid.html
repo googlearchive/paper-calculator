@@ -28,7 +28,7 @@ license that can be found in the LICENSE file.
         top: 0;
         left: -20px;
         bottom: 0;
-        width: 20px;
+        width: 32px;
       }
     
     </style>
@@ -51,7 +51,7 @@ license that can be found in the LICENSE file.
       
     </div>
     
-    <div class="handle-bar"></div>
+    <div class="handle-bar" on-tap="{{handleBarTap}}"></div>
     
   </template>
   
@@ -61,6 +61,10 @@ license that can be found in the LICENSE file.
       
       keyTap: function(e) {
         this.fire('cal-keytap', {key: e.target.templateInstance.model});
+      },
+      
+      handleBarTap: function(e) {
+        e.preventDefault();
       },
       
       findKey: function(label) {
