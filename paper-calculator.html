@@ -1,22 +1,17 @@
 <!--
-Copyright 2014 The Toolkitchen Authors. All rights reserved.
+Copyright 2013 The Toolkitchen Authors. All rights reserved.
 Use of this source code is governed by a BSD-style
 license that can be found in the LICENSE file.
 -->
 
 <!--
 /**
- * @module Quantum Paper Elements
- */
-/**
- * paper-calculator
+ * @group Quantum Paper Elements
  *
- * Example:
- *
- *    <paper-calculator></paper-calculator>
- *
- * @class paper-calculator
- * @author The Polymer Authors
+ * A fancy looking calculator that can only perform simple math calculation. 
+ * 
+ * @element paper-calculator
+ * @homepage github.io
  */
 -->
 
@@ -115,10 +110,42 @@ license that can be found in the LICENSE file.
         ['Deg', 'Rad', 'func', 'Table', 'Graph', '']
       ],
       
+      /**
+       * If true, calculator changes to wide layout.
+       *
+       * @attribute wideMode
+       * @type boolean
+       * @default false
+       */
       wideMode: false,
+      
+      /**
+       * Min-width when calculator changes to wide layout.
+       *
+       * @attribute responsiveWidth
+       * @type string
+       * @default ''
+       */
       responsiveWidth: '',
+      
+      /**
+       * The expression entered to the calculator.
+       *
+       * @attribute expression
+       * @type string
+       * @default ''
+       */
       expression: '',
+      
+      /**
+       * The result from evaluating the expression.
+       *
+       * @attribute result
+       * @type string
+       * @default ''
+       */
       result: '',
+      
       level: 0,
       
       eventDelegates: {
