@@ -34,7 +34,7 @@ license that can be found in the LICENSE file.
         color: #fff;
       }
       
-      #standard ^ .column:nth-of-type(4) {
+      #standard /shadow/ .column:nth-of-type(4) {
         background-color: #666;
         border-left: 1px solid #444;
       }
@@ -81,21 +81,21 @@ license that can be found in the LICENSE file.
         transition: none;
       }
       
-      #standard ^^ paper-ink ^ #inkInner {
+      #standard /shadow-deep/ paper-ink /shadow/ #inkInner {
         background-color: #4c4c4c;
       }
       
-      #advanced ^^ paper-ink ^ #inkInner {
+      #advanced /shadow-deep/ paper-ink /shadow/ #inkInner {
         background-color: #40bd9e;
       }
       
-      #mode ^^ paper-ink ^ #inkInner {
+      #mode /shadow-deep/ paper-ink /shadow/ #inkInner {
         background-color: #1de9b6;
       }
       
     </style>
     
-    <paper-calculator-panels class="{{wideMode ? 'wide-layout' : 'narrow-layout'}} level{{level}}" selected="{{level}}" wideMode="{{wideMode}}">
+    <paper-calculator-panels class="{{wideMode ? 'wide-layout' : 'narrow-layout'}} level{{level}}" margin="16px" selected="{{level}}" wideMode="{{wideMode}}">
     
       <paper-calculator-keygrid id="standard" flex="1" keys="{{standardKeys}}"></paper-calculator-keygrid>
     

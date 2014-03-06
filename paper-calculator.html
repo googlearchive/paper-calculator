@@ -67,6 +67,10 @@ license that can be found in the LICENSE file.
         transform: scale(0);
       }
       
+      #resultInk.error {
+        background-color: #f50057;
+      }
+      
       #resultInk.spill {
         -webkit-transform: scale(1);
         transform: scale(1);
@@ -76,13 +80,13 @@ license that can be found in the LICENSE file.
       
     </style>
     
-    <div id="resultInk" class="{{result ? 'spill' : ''}}"></div>
+    <div id="resultInk" class="{{result ? 'spill' : ''}} {{error ? 'error' : ''}}"></div>
     
-    <paper-calculator-output id="output" expression="{{expression}}" result="{{result}}" class="level{{level}}"></paper-calculator-output>
+    <paper-calculator-output id="output" expression="{{expression}}" result="{{result}}" error="{{error}}" class="level{{level}}"></paper-calculator-output>
     
     <paper-calculator-keypad id="keypad" wideMode="{{wideMatches || wideMode}}" standardKeys="{{standardKeys}}" advancedKeys="{{advancedKeys}}" modeKeys="{{modeKeys}}" level="{{level}}" on-cal-keytap="{{keyTap}}"></paper-calculator-keypad>
     
-    <paper-calculator-math id="math" expression="{{expression}}" result="{{result}}"></paper-calculator-math>
+    <paper-calculator-math id="math" expression="{{expression}}" result="{{result}}" error="{{error}}"></paper-calculator-math>
     
     <core-media-query query="min-width: {{responsiveWidth}}" queryMatches="{{wideMatches}}"></core-media-query>
     
@@ -109,6 +113,8 @@ license that can be found in the LICENSE file.
       modeKeys: [
         ['Deg', 'Rad', 'func', 'Table', 'Graph', '']
       ],
+      
+      errorMsgs: ['error...', 'umm...', ':-('],
       
       /**
        * If true, calculator changes to wide layout.
@@ -156,6 +162,7 @@ license that can be found in the LICENSE file.
       clear: function() {
         this.expression = '';
         this.result = '';
+        this.error = '';
       },
       
       del: function() {
@@ -219,6 +226,13 @@ license that can be found in the LICENSE file.
         s.top = -t + 'px';
         s.left = -t * 2 + (keyRect.left - rect.left + keyRect.width / 2) + 'px';
         s.width = s.height = 4 * t + 'px';
+      },
+      
+      resultChanged: function() {
+        if (this.result === '?') {
+          this.error = this.errorMsgs[Math.floor(Math.random() * 
+              this.errorMsgs.length)];
+        }
       }
       
     });

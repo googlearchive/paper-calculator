@@ -6,7 +6,7 @@ license that can be found in the LICENSE file.
 
 <link rel="import" href="../polymer/polymer.html">
 
-<polymer-element name="paper-calculator-output" attributes="expression result">
+<polymer-element name="paper-calculator-output" attributes="expression result error">
 
   <template>
   
@@ -53,6 +53,19 @@ license that can be found in the LICENSE file.
         white-space: nowrap;
       }
       
+      .output.error #expression {
+        display: none;
+      }
+      
+      #error {
+        display: none;
+        color: #eee;
+      }
+      
+      .output.error #error {
+        display: block;
+      }
+      
       .output:not(.show-result) #expression.animate {
         transition: width 0.2s ease-in-out;
       }
@@ -79,10 +92,11 @@ license that can be found in the LICENSE file.
       
     </style>
   
-    <div class="output {{result ? 'show-result' : ''}}">
+    <div class="output {{result && !error ? 'show-result' : ''}} {{error ? 'error' : ''}}">
     
       <div class="expression-outer flexbox align-center justify-end">
         <div id="expression"></div>
+        <div id="error"></div>
       </div>
       
       <div class="result flexbox align-center">
@@ -114,6 +128,10 @@ license that can be found in the LICENSE file.
             s.width = w + 'px';
           });
         });
+      },
+      
+      errorChanged: function() {
+        this.$.error.innerHTML = this.error;
       }
       
     });
