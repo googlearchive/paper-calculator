@@ -7,7 +7,7 @@ license that can be found in the LICENSE file.
 <link rel="import" href="../paper-ink/paper-ink.html">
 
 <polymer-element name="paper-calculator-key" attributes="label" 
-    on-trackstart="{{resetInk}}" on-pointerdown="{{inkSpill}}" on-pointerup="{{inkEvaporate}}" on-pointerleave="{{inkEvaporate}}">
+    on-trackstart="{{cancelKey}}" on-pointerdown="{{inkSpill}}" on-pointerup="{{inkEvaporate}}" on-pointerleave="{{inkEvaporate}}">
 
   <template>
   
@@ -77,6 +77,11 @@ license that can be found in the LICENSE file.
       
       labelChanged: function() {
         this.$.keyLabel.innerHTML = this.label;
+      },
+      
+      cancelKey: function(e) {
+        e.preventTap();
+        this.resetInk();
       },
       
       resetInk: function() {
