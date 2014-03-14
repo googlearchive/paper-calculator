@@ -23,7 +23,7 @@ license that can be found in the LICENSE file.
       }
       
       /*@polyfill #panelContainer > * */
-      ::content > * {
+      content /content/ * {
         position: absolute;
         top: 0;
         right: 0;
@@ -33,7 +33,7 @@ license that can be found in the LICENSE file.
       }
       
       /*@polyfill :host.dragging > #panelContainer > * */
-      :host(.dragging) ::content > * {
+      :host(.dragging) /content/ * {
         transition: none;
       }
       
