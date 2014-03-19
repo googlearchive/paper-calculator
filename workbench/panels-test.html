@@ -2,7 +2,7 @@
 <html>
 <head>
 
-  <title>Sliding Panels Demo</title>
+  <title>paper-calculator-panels</title>
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
   <meta name="mobile-web-app-capable" content="yes">
@@ -11,7 +11,6 @@
   <script src="../../platform/platform.js"></script>
   
   <link rel="import" href="../paper-calculator-panels.html">
-  <link rel="import" href="../../font-roboto2/roboto2.html">
 
   <style>
   
@@ -20,52 +19,54 @@
     }
   
     body {
-      font-family: Roboto2, 'Helvetica Neue', Helvetica, Arial;
       margin: 0;
       -webkit-user-select: none;
       -moz-user-select: none;
       -ms-user-select: none;
       user-select: none;
-      
       -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
       -webkit-touch-callout: none;
     }
     
-    paper-calculator-panels {
+    #outerPanels {
       width: 100%;
       height: 100%;
-      background-color: #9c27b0;
       font-size: 20px;
-      color: #ddd;
+      overflow: hidden;
     }
     
-    #panel0 {
-      background-color: #3f51b8;
+    .panel1 {
+      background: #3f51b8;
     }
     
-    #panel1 {
-      background-color: #009688;
+    .panel2 {
+      background: #009688;
     }
     
-    #panel2 {
-      background-color: #ff5722;
-    }
-    
-    #panel3 {
-      background-color: #9c27b0;
+    .panel3 {
+      background: #ff5722;
     }
     
   </style>
 
 </head>
+
 <body unresolved>
 
-  <paper-calculator-panels selected="0" margin="40px" responsiveWidth="1000px">
-    <div id="panel0" flex="1">0</div>
-    <div id="panel1" flex="0.8">1</div>
-    <div id="panel2" flex="0.5">2</div>
-    <div id="panel3" flex="0.25">3</div>
+  <paper-calculator-panels id="outerPanels" margin="40" drawerWidthRatio="0.8" responsiveWidth="1000px">
+  
+    <div main class="panel1">panel1</div>
+    
+    <paper-calculator-panels drawer id="innerPanels" margin="40" drawerWidthRatio="0.5" responsiveWidth="1000px">
+    
+      <div main class="panel2">panel2</div>
+      
+      <div drawer class="panel3">panel3</div>
+      
+    </paper-calculator-panels>
+    
   </paper-calculator-panels>
   
 </body>
+
 </html>

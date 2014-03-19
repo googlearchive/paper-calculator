@@ -49,6 +49,9 @@ license that can be found in the LICENSE file.
         width: 100%;
         height: 38%;
         z-index: 1;
+      }
+
+      #output.wide {      
         box-shadow: 0 5px 4px rgba(0, 0, 0, 0.3);
       }
       
@@ -80,11 +83,11 @@ license that can be found in the LICENSE file.
       
     </style>
     
-    <div id="resultInk" class="{{result ? 'spill' : ''}} {{error ? 'error' : ''}}"></div>
+    <div id="resultInk" class="{{ {spill : result, error : error} | tokenList }}"></div>
     
-    <paper-calculator-output id="output" expression="{{expression}}" result="{{result}}" error="{{error}}" class="level{{level}}"></paper-calculator-output>
+    <paper-calculator-output id="output" class="{{ {wide : wideMatches || wideMode} | tokenList}}" expression="{{expression}}" result="{{result}}" error="{{error}}"></paper-calculator-output>
     
-    <paper-calculator-keypad id="keypad" wideMode="{{wideMatches || wideMode}}" standardKeys="{{standardKeys}}" advancedKeys="{{advancedKeys}}" modeKeys="{{modeKeys}}" level="{{level}}" on-cal-keytap="{{keyTap}}"></paper-calculator-keypad>
+    <paper-calculator-keypad id="keypad" wideMode="{{wideMatches || wideMode}}" standardKeys="{{standardKeys}}" advancedKeys="{{advancedKeys}}" modeKeys="{{modeKeys}}" on-cal-keytap="{{keyTap}}"></paper-calculator-keypad>
     
     <paper-calculator-math id="math" expression="{{expression}}" result="{{result}}" error="{{error}}"></paper-calculator-math>
     
@@ -152,8 +155,6 @@ license that can be found in the LICENSE file.
        */
       result: '',
       
-      level: 0,
-      
       eventDelegates: {
         keydown: 'keyDown',
         keypress: 'keyPress'
@@ -206,7 +207,7 @@ license that can be found in the LICENSE file.
       },
       
       processKey: function(k) {
-        if (this.result) {
+        if (this.result && k !== '=') {
           this.clear();
         }
         if (k === '=') {
