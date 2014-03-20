@@ -1,0 +1,10 @@
+{
+  "name": "paper-calculator",
+  "private": true,
+  "dependencies": {
+    "polymer": "Polymer/polymer#master",
+    "core-media-query": "Polymer/core-media-query#master",
+    "polymer-flex-layout": "Polymer/polymer-flex-layout#master",
+    "paper-ink": "Polymer/paper-ink#master"
+  }
+}
