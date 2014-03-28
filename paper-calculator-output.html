@@ -13,7 +13,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
   <template>
   
-    <link rel="stylesheet" href="../polymer-flex-layout/polymer-flex-layout.css">
+    <link rel="stylesheet" href="../core-layout/core-layout.css">
   
     <style>
     
@@ -97,15 +97,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   
     <div class="output {{result && !error ? 'show-result' : ''}} {{error ? 'error' : ''}}">
     
-      <div class="expression-outer flexbox align-center justify-end">
+      <div class="expression-outer" core-flow core-align="center" core-justify="end">
         <div id="expression"></div>
         <div id="error"></div>
       </div>
       
-      <div class="result flexbox align-center">
+      <div class="result" core-flow core-align="center">
       
         <div class="result-equal">=</div>
-        <div class="result-value flexbox justify-end flex">{{result}}</div>
+        <div class="result-value" core-flow core-justify="end" core-flex>{{result}}</div>
         
       </div>
       

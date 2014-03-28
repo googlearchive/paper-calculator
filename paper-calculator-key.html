@@ -14,7 +14,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
   <template>
   
-    <link rel="stylesheet" href="../polymer-flex-layout/polymer-flex-layout.css">
+    <link rel="stylesheet" href="../core-layout/core-layout.css">
   
     <style>
     
@@ -50,13 +50,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       
     </style>
   
-    <div class="ink-container flexbox justify-center align-center">
+    <div class="ink-container" core-flow core-justify="center" core-align="center">
       <div class="ink-center">
         <paper-ink id="ink" color="rgba(241, 250, 65, 0.85)" duration="320" on-paper-ink-evaporate-complete="{{resetInk}}"></paper-ink>
       </div>
     </div>
     
-    <div id="keyLabel" class="flexbox justify-center align-center {{active ? 'active' : ''}}"></div>
+    <div id="keyLabel" class="{{active ? 'active' : ''}}" core-flow core-justify="center" core-align="center"></div>
   
   </template>
 

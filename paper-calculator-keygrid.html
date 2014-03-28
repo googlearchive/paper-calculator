@@ -13,7 +13,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
   <template>
   
-    <link rel="stylesheet" href="../polymer-flex-layout/polymer-flex-layout.css">
+    <link rel="stylesheet" href="../core-layout/core-layout.css">
     
     <style>
     
@@ -36,15 +36,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     
     </style>
     
-    <div id="keys" class="flexbox">
+    <div id="keys" core-flow>
     
       <template repeat="{{col in keys}}">
       
-        <div class="flexbox column flex">
+        <div core-flow="v" core-flex>
         
           <template repeat="{{col}}">
           
-            <paper-calculator-key class="flex" label="{{}}" on-tap="{{keyTap}}"></paper-calculator-key>
+            <paper-calculator-key core-flex label="{{}}" on-tap="{{keyTap}}"></paper-calculator-key>
             
           </template>
           
