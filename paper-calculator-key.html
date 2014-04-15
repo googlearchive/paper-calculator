@@ -9,8 +9,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <link rel="import" href="../paper-ink/paper-ink.html">
 
-<polymer-element name="paper-calculator-key" attributes="label" 
-    on-trackstart="{{cancelKey}}" on-pointerdown="{{inkSpill}}" on-pointerup="{{inkEvaporate}}" on-pointerleave="{{inkEvaporate}}">
+<polymer-element name="paper-calculator-key" attributes="label" on-trackstart="{{cancelKey}}" on-down="{{inkSpill}}" on-up="{{inkEvaporate}}">
 
   <template>
   
