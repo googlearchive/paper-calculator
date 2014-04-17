@@ -9,7 +9,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <link rel="import" href="../paper-ink/paper-ink.html">
 
-<polymer-element name="paper-calculator-key" attributes="label" on-trackstart="{{cancelKey}}" on-down="{{inkSpill}}" on-up="{{inkEvaporate}}">
+<polymer-element name="paper-calculator-key" on-trackstart="{{cancelKey}}" on-down="{{inkSpill}}" on-up="{{inkEvaporate}}">
 
   <template>
   
@@ -62,6 +62,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <script>
   
     Polymer('paper-calculator-key', {
+      
+      publish: {
+        label: {reflect: true}
+      },
       
       labelChanged: function() {
         this.$.keyLabel.innerHTML = this.label;
