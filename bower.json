@@ -2,10 +2,11 @@
   "name": "paper-calculator",
   "private": true,
   "dependencies": {
-    "polymer": "Polymer/polymer#master",
-    "core-media-query": "Polymer/core-media-query#master",
-    "core-layout": "Polymer/core-layout#master",
-    "paper-ink": "Polymer/paper-ink#master",
-    "font-roboto2": "Polymer/font-roboto2#master"
-  }
+    "polymer": "Polymer/polymer#0.2.3",
+    "core-media-query": "Polymer/core-media-query#0.2.3",
+    "core-layout": "Polymer/core-layout#0.2.3",
+    "paper-ink": "Polymer/paper-ink#0.2.3",
+    "font-roboto2": "Polymer/font-roboto2#0.2.3"
+  },
+  "version": "0.2.3"
 }
