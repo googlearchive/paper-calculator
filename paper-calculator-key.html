@@ -7,13 +7,11 @@ Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 -->
 
-<link rel="import" href="../paper-ink/paper-ink.html">
+<link rel="import" href="../paper-ripple/paper-ripple.html">
 
-<polymer-element name="paper-calculator-key" on-trackstart="{{cancelKey}}" on-down="{{inkSpill}}" on-up="{{inkEvaporate}}">
+<polymer-element name="paper-calculator-key" on-trackstart="{{cancelKey}}" on-down="{{downAction}}" on-up="{{upAction}}">
 
   <template>
-  
-    <link rel="stylesheet" href="../core-layout/core-layout.css">
   
     <style>
     
@@ -29,8 +27,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         left: 0;
       }
       
-      #keyLabel.active {
-        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.13);
+      #keyLabel {
+        pointer-events: none;
       }
       
       .ink-center {
@@ -39,23 +37,25 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         height: 0;
       }
       
-      paper-ink {
+      #ink {
         position: absolute;
         top: -30px;
         left: -30px;
         width: 60px;
         height: 60px;
+        color: rgb(241, 250, 65);
+        pointer-events: none;
       }
       
     </style>
   
-    <div class="ink-container core-h core-justify-center core-align-center">
+    <div class="ink-container" horizontal center-justified center layout>
       <div class="ink-center">
-        <paper-ink id="ink" color="rgba(241, 250, 65, 0.85)" duration="320" on-paper-ink-evaporate-complete="{{resetInk}}"></paper-ink>
+        <paper-ripple id="ink" class="circle" initialOpacity="0.75" opacityDecayVelocity="0.95" touchDownAcceleration="1024.0" touchUpAcceleration="2048.0"></paper-ripple>
       </div>
     </div>
     
-    <div id="keyLabel" class="{{active ? 'active' : ''}} core-h core-justify-center core-align-center"></div>
+    <div id="keyLabel" class="{{active ? 'active' : ''}}" horizontal center-justified center layout></div>
   
   </template>
 
@@ -71,6 +71,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         this.$.keyLabel.innerHTML = this.label;
       },
       
+      downAction: function(e) {
+        this.$.ink.downAction(e);
+      },
+      
+      upAction: function() {
+        this.$.ink.upAction();
+      },
+      
       cancelKey: function(e) {
         e.preventTap();
         this.resetInk();
@@ -78,23 +86,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       
       resetInk: function() {
         this.active = false;
-        this.$.ink.reset();
-      },
-      
-      inkSpill: function(e) {
-        this.active = true;
-        this.$.ink.spill();
-      },
-      
-      inkEvaporate: function() {
-        if (this.active) {
-          this.$.ink.evaporateAfterSpillCompleted();
-        }
-      },
-      
-      inking: function() {
-        this.inkSpill();
-        this.inkEvaporate();
+        this.$.ink.cancel();
       }
     
     });

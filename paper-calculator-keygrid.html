@@ -13,8 +13,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
   <template>
   
-    <link rel="stylesheet" href="../core-layout/core-layout.css">
-    
     <style>
     
       :host {
@@ -36,15 +34,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     
     </style>
     
-    <div id="keys" class="core-h">
+    <div id="keys" horizontal layout>
     
       <template repeat="{{col in keys}}">
       
-        <div class="core-v" core-flex>
+        <div flex vertical layout>
         
           <template repeat="{{col}}">
           
-            <paper-calculator-key core-flex label="{{}}" on-tap="{{keyTap}}"></paper-calculator-key>
+            <paper-calculator-key flex label="{{}}" on-tap="{{keyTap}}"></paper-calculator-key>
             
           </template>
           
