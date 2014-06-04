@@ -28,23 +28,23 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <template>
 
     <style>
-    
+
       :host {
         display: block;
         position: relative;
         background-color: #eee;
         overflow: hidden;
-        
+
         -webkit-user-select: none;
         -moz-user-select: none;
         -ms-user-select: none;
         user-select: none;
-        
+
         -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
         -webkit-touch-callout: none;
         -webkit-font-smoothing: antialiased;
       }
-      
+
       #output {
         position: absolute;
         top: 0;
@@ -57,71 +57,75 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       #output.wide {      
         box-shadow: 0 5px 4px rgba(0, 0, 0, 0.3);
       }
-      
+
       #keypad {
         position: absolute;
         top: 38%;
         bottom: 0;
         width: 100%;
       }
-      
+
       #resultInk {
         position: absolute;
         border-radius: 50%;
         background-color: #73daeb;
-        -webkit-transform: scale(0);
-        transform: scale(0);
+        -webkit-transform: translateZ(0) scale(0);
+        transform: translateZ(0) scale(0);
       }
-      
+
       #resultInk.error {
         background-color: #f50057;
       }
-      
+
       #resultInk.spill {
         -webkit-transform: scale(1);
         transform: scale(1);
         -webkit-transition: -webkit-transform 0.38s ease-out;
         transition: transform 0.38s ease-out;
       }
-      
+
     </style>
-    
+
     <div id="resultInk" class="{{ {spill : result, error : error} | tokenList }}"></div>
-    
+
     <paper-calculator-output id="output" class="{{ {wide : wideMatches || wideMode} | tokenList}}" expression="{{expression}}" result="{{result}}" error="{{error}}"></paper-calculator-output>
-    
+
     <paper-calculator-keypad id="keypad" wideMode="{{wideMatches || wideMode}}" standardKeys="{{standardKeys}}" advancedKeys="{{advancedKeys}}" modeKeys="{{modeKeys}}" on-cal-keytap="{{keyTap}}"></paper-calculator-keypad>
-    
+
     <paper-calculator-math id="math" expression="{{expression}}" result="{{result}}" error="{{error}}"></paper-calculator-math>
-    
+
     <core-media-query query="min-width: {{responsiveWidth}}" queryMatches="{{wideMatches}}"></core-media-query>
-    
+
   </template>
 
   <script>
 
     Polymer('paper-calculator', {
-      
+
+      domReady: function() {
+        this.updateResultInk();
+        window.addEventListener('resize', this.updateResultInk.bind(this));
+      },
       standardKeys: [
         ['7', '4', '1', '.'],
         ['8', '5', '2', '0'],
         ['9', '6', '3', '='],
         ['<small>DEL</small>', '+', '-', '&#247;', '&#215;'],
       ],
-      
+
       advancedKeys: [
         ['2nd', '1/x', 'x!', 'sin', 'sinh', 'EXP'],
         ['(', 'x&#178;', '&#8730;', 'cos', 'cosh', '&#928;'],
         [')', 'x&#179;', '&#8319; &#8730;y', 'tan', 'tanh', 'EE'],
         ['%', 'y&#8319;', 'log', 'ln', 'e&#8319', 'Rand']
       ],
-      
+
       modeKeys: [
         ['Deg', 'Rad', 'func', 'Table', 'Graph', '']
       ],
-      
+
       errorMsgs: ['error...', 'umm...', ':-('],
-      
+
       /**
        * If true, calculator changes to wide layout.
        *
@@ -130,7 +134,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
        * @default false
        */
       wideMode: false,
-      
+
       /**
        * Min-width when calculator changes to wide layout.
        *
@@ -139,7 +143,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
        * @default ''
        */
       responsiveWidth: '',
-      
+
       /**
        * The expression entered to the calculator.
        *
@@ -148,7 +152,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
        * @default ''
        */
       expression: '',
-      
+
       /**
        * The result from evaluating the expression.
        *
@@ -157,34 +161,33 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
        * @default ''
        */
       result: '',
-      
+
       eventDelegates: {
         keydown: 'keyDown',
         keypress: 'keyPress'
       },
-      
+
       clear: function() {
         this.expression = '';
         this.result = '';
         this.error = '';
       },
-      
+
       del: function() {
         this.expression = this.expression.slice(0, -1);
       },
-      
+
       eval: function() {
-        this.updateResultInk();
         this.$.math.eval();
       },
-      
+
       keyTap: function(e) {
         var k = e.detail.key;
         if (this.modeKeys[0].indexOf(k) < 0) {
           this.processKey(k);
         }
       },
-      
+
       keyDown: function(e) {
         // backspace key
         if (e.keyCode === 8) {
@@ -192,7 +195,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           e.preventDefault();
         }
       },
-      
+
       keyPress: function(e) {
         var c = e.keyCode, k;
         // enter key
@@ -208,20 +211,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         this.processKey(k);
         e.preventDefault();
       },
-      
+
       processKey: function(k) {
         if (this.result && k !== '=') {
           this.clear();
         }
         if (k === '=') {
-          this.eval();
+          this.async(this.eval);
         } else if (k === '<small>DEL</small>') {
           this.del();
         } else {
           this.expression += k;
         }
       },
-      
+
       updateResultInk: function() {
         var rect = this.getBoundingClientRect();
         var keyRect = this.$.keypad.equalKey.getBoundingClientRect();
@@ -231,14 +234,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         s.left = -t * 2 + (keyRect.left - rect.left + keyRect.width / 2) + 'px';
         s.width = s.height = 4 * t + 'px';
       },
-      
+
       resultChanged: function() {
         if (this.result === '?') {
           this.error = this.errorMsgs[Math.floor(Math.random() * 
               this.errorMsgs.length)];
         }
       }
-      
+
     });
 
   </script>
