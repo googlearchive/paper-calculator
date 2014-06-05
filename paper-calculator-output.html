@@ -89,11 +89,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     </style>
 
-    <div class="output {{result && !error ? 'show-result' : ''}} {{error ? 'error' : ''}}">
+    <div class="output {{ {error: error, 'show-result': result && !error } | tokenList }}">
 
       <div class="expression-outer" horizontal end-justified center layout>
-        <div id="expression"></div>
-        <div id="error"></div>
+        <div id="expression">{{expression}}</div>
+        <div id="error">{{error}}</div>
       </div>
 
       <div class="result" horizontal center layout>
@@ -109,16 +109,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
   <script>
 
-    Polymer('paper-calculator-output', {
-      expressionChanged: function() {
-        this.$.expression.textContent = this.expression;
-      },
-
-      errorChanged: function() {
-        this.$.error.textContent = this.error;
-      }
-
-    });
+    Polymer('paper-calculator-output');
 
   </script>
 
