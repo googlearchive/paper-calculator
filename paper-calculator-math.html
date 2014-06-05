@@ -17,7 +17,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       
       eval: function() {
         var s = this.expression;
-        s = s.replace(/&#215;/g, '*').replace(/&#247;/g, '/');
+        s = s.replace(/\u00D7/g, '*').replace(/\u00F7/g, '/');
         try {
           this.result = eval(s);
         } catch (x) {

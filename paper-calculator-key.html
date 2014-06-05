@@ -46,6 +46,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         color: rgb(241, 250, 65);
         pointer-events: none;
       }
+
+      .small {
+        font-size: smaller;
+      }
       
     </style>
   
@@ -68,7 +72,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
       
       labelChanged: function() {
-        this.$.keyLabel.innerHTML = this.label;
+        if (this.label === 'DEL') {
+          this.$.keyLabel.classList.add('small');
+        }
+        this.$.keyLabel.textContent = this.label;
       },
       
       downAction: function(e) {

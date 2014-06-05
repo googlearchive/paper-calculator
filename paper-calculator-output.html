@@ -110,13 +110,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <script>
 
     Polymer('paper-calculator-output', {
-      // TODO(dfreedm): replace innerHTML for sanitization
       expressionChanged: function() {
-        this.$.expression.innerHTML = this.expression;
+        this.$.expression.textContent = this.expression;
       },
 
       errorChanged: function() {
-        this.$.error.innerHTML = this.error;
+        this.$.error.textContent = this.error;
       }
 
     });

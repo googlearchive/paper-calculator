@@ -110,14 +110,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         ['7', '4', '1', '.'],
         ['8', '5', '2', '0'],
         ['9', '6', '3', '='],
-        ['<small>DEL</small>', '+', '-', '&#247;', '&#215;'],
+        ['DEL', '+', '-', '\u00F7', '\u00D7'],
       ],
 
       advancedKeys: [
         ['2nd', '1/x', 'x!', 'sin', 'sinh', 'EXP'],
-        ['(', 'x&#178;', '&#8730;', 'cos', 'cosh', '&#928;'],
-        [')', 'x&#179;', '&#8319; &#8730;y', 'tan', 'tanh', 'EE'],
-        ['%', 'y&#8319;', 'log', 'ln', 'e&#8319', 'Rand']
+        ['(', 'x\u00B2', '\u221A', 'cos', 'cosh', '\u03A0'],
+        [')', 'x\u00B3', '\u207F \u221Ay', 'tan', 'tanh', 'EE'],
+        ['%', 'y\u207F', 'log', 'ln', 'e\u207F', 'Rand']
       ],
 
       modeKeys: [
@@ -205,9 +205,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           k = String.fromCharCode(c);
         }
         var key = this.$.keypad.findKey(k);
-        if (key) {
-          key.inking();
-        }
         this.processKey(k);
         e.preventDefault();
       },
@@ -218,7 +215,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
         if (k === '=') {
           this.async(this.eval);
-        } else if (k === '<small>DEL</small>') {
+        } else if (k === 'DEL') {
           this.del();
         } else {
           this.expression += k;
