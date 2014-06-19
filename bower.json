@@ -3,7 +3,7 @@
   "private": true,
   "dependencies": {
     "core-media-query": "Polymer/core-media-query#master",
-    "font-roboto2": "Polymer/font-roboto2#master",
+    "font-roboto": "Polymer/font-roboto#master",
     "paper-ripple": "Polymer/paper-ripple#master"
   }
 }
