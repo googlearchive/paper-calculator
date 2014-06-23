@@ -9,7 +9,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <link rel="import" href="../core-media-query/core-media-query.html">
 
-<polymer-element name="paper-calculator-panels" touch-action="pan-y" attributes="drawerWidthRatio opened margin wideMode responsiveWidth">
+<polymer-element name="paper-calculator-panels" attributes="drawerWidthRatio opened margin wideMode responsiveWidth">
 
   <template>
     
@@ -66,11 +66,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     
     <div id="panelContainer" class="{{wideMode ? 'wide-layout' : ''}}">
     
-      <div id="main">
+      <div id="main" touch-action="none">
         <content select="[main]"></content>
       </div>
       
-      <div id="drawer" on-trackstart="{{trackStart}}" on-track="{{track}}" on-trackend="{{trackEnd}}">
+      <div id="drawer" touch-action="pan-y" on-trackstart="{{trackStart}}" on-track="{{track}}" on-trackend="{{trackEnd}}">
         <content select="[drawer]"></content>
       </div>
     
