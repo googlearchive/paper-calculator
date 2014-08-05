@@ -66,11 +66,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     
     <div id="panelContainer" class="{{wideMode ? 'wide-layout' : ''}}">
     
-      <div id="main" touch-action="none">
+      <div id="main">
         <content select="[main]"></content>
       </div>
       
-      <div id="drawer" touch-action="pan-y" on-trackstart="{{trackStart}}" on-track="{{track}}" on-trackend="{{trackEnd}}">
+      <div id="drawer" on-trackstart="{{trackStart}}" on-trackx="{{trackx}}" on-trackend="{{trackEnd}}">
         <content select="[drawer]"></content>
       </div>
     
@@ -134,7 +134,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         e.stopPropagation();
       },
       
-      track: function(e) {
+      trackx: function(e) {
         if (this.wideMode) {
           return;
         }
