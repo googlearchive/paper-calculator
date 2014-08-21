@@ -103,7 +103,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       updateSize: function() {
         var w = 1 / (1 + this.drawerWidthRatio) * 100;
         this.$.main.style.width = this.$.drawer.style.left = 
-            this.wideMode ? w + '%' : null;
+            this.wideMode ? w + '%' : '';
         this.$.drawer.style.width = this.wideMode ? 
             100 - w + '%' : this.drawerWidthRatio * 100 + '%';
         this.opened = false;
@@ -117,7 +117,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       
       positionDrawer: function(x) {
         var s = this.$.drawer.style;
-        s.webkitTransform = s.transform = x ? 'translate3d(' + x + ', 0, 0)' : null;
+        s.webkitTransform = s.transform = x ? 'translate3d(' + x + ', 0, 0)' : '';
       },
       
       trackStart: function(e) {
